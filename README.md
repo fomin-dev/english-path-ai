@@ -4,7 +4,7 @@
 
 Built for one learner going from A2 → C1 while preparing for university admissions in the US — but designed from day one to work for anyone, in 🇬🇧 English, 🇷🇺 Russian, or 🇺🇦 Ukrainian.
 
-> Runs entirely on free tiers: Telegram Bot API, Google Gemini (free tier), Render free web service, Render/Neon/Supabase free Postgres, UptimeRobot free monitoring. **$0/month to run.**
+> Runs entirely on free tiers: Telegram Bot API, Google Gemini (free tier), a free container/web-service host (Koyeb or Render), Neon/Render free Postgres, UptimeRobot free monitoring. **$0/month to run.**
 
 ---
 
@@ -48,13 +48,13 @@ Built for one learner going from A2 → C1 while preparing for university admiss
 | Concern | Choice | Why |
 |---|---|---|
 | Language | **TypeScript**, strict mode, ES2022/NodeNext | Type safety across a large, long-lived domain model (SRS state, roadmap phases, AI JSON responses) |
-| Bot framework | **[grammY](https://grammy.dev)** + `@grammyjs/conversations` | Modern, modular, first-class TypeScript support; the conversations plugin models multi-step flows (onboarding, goal-setting) as linear `async function`s instead of hand-rolled state machines |
-| Database | **PostgreSQL** via **Prisma** | Strong relational integrity for per-user progress/SRS state, native migrations, trivial free managed hosting (Render/Neon/Supabase) with backups |
+| Bot framework | **[grammY](https://grammy.dev)** | Modern, modular, first-class TypeScript support. Multi-step flows (onboarding, goal-setting, exercise sessions) are plain session-backed callback handlers rather than the `conversations` plugin — the placement test's randomized question order and per-step DB writes don't play well with that plugin's replay-on-resume model |
+| Database | **PostgreSQL** via **Prisma** | Strong relational integrity for per-user progress/SRS state, native migrations, trivial free managed hosting (Neon/Render/Supabase) with backups |
 | Content | **Versioned TypeScript, not the database** | Vocabulary, grammar topics, reading/listening texts, IELTS/SAT banks and achievements all live under `src/content/**` and ship with the app. Only *per-user* state (SRS progress, attempts, submissions) is in Postgres, referencing content by a stable string key. Content changes are then just a normal, reviewable PR — no migration, no seed step, no drift between "what's in the DB" and "what's in git" |
 | AI | Provider-agnostic `AIProvider` interface; default implementation targets **Google Gemini's free tier** | Keeps the AI tutor / writing checker / adaptive content generation swappable — drop in an OpenAI or Anthropic implementation behind the same interface without touching a single handler |
 | Text-to-speech | Free, keyless Google Translate TTS endpoint | No paid TTS API required for the Listening module; every exercise has a text fallback if synthesis fails |
 | i18n | Hand-rolled dot-path JSON catalogs (`en.json` / `ru.json` / `uk.json`) with `{{placeholder}}` interpolation | Zero extra runtime dependency, trivial to diff in PRs, English-fallback built in |
-| Session/conversation state | Postgres-backed `StorageAdapter` (`BotSession` table) | Render's filesystem is ephemeral and we run a single web-service instance — session state must survive restarts/redeploys |
+| Session/conversation state | Postgres-backed `StorageAdapter` (`BotSession` table) | Free container hosts have ephemeral filesystems and redeploy/restart the process often — session state must survive that |
 | HTTP layer | **Hono** | Tiny, fast, first-class grammY webhook adapter; serves `/health` for UptimeRobot and `/webhook/:secret` for Telegram |
 | Background jobs | `node-cron` | Per-timezone reminder delivery and hourly streak-lapse maintenance, in-process (no separate worker needed at this scale) |
 | Testing | **Vitest** | Fast, native ESM/TS support, `vitest run` in CI |
@@ -72,8 +72,7 @@ english-path-ai/
 ├── src/
 │   ├── ai/                    # AIProvider interface + Gemini implementation
 │   ├── bot/
-│   │   ├── conversations/     # multi-step flows (onboarding, goal-setting…)
-│   │   ├── handlers/          # command/callback handlers, one folder per feature
+│   │   ├── handlers/          # command/callback handlers, one folder per feature (onboarding, lessons, vocabulary, grammar, reading, listening, writing, tutor, ielts, sat, stats, settings, admin…)
 │   │   ├── keyboards/         # inline keyboard builders
 │   │   ├── middlewares/       # session/user/i18n middleware
 │   │   ├── index.ts           # bot composition (middleware + handler wiring)
@@ -139,29 +138,38 @@ The bot runs in **long-polling mode** locally (no `BOT_WEBHOOK_URL` set) — jus
 
 ---
 
-## 🌍 Deployment (Render — free tier)
+## 🌍 Deployment (free tier)
 
-1. **Push this repo to GitHub** (see below).
-2. In the [Render Dashboard](https://dashboard.render.com/): **New → Blueprint**, point it at your fork/repo. Render reads `render.yaml` and provisions:
-   - A **free Postgres** database
-   - A **free web service** running `npm ci && npm run build && npx prisma migrate deploy` at build time, `npm start` at runtime, with `GET /health` as the health check
-3. Render generates a public URL like `https://english-path-ai.onrender.com`. Open the service's **Environment** tab and fill in the variables marked "sync: false" in `render.yaml`:
-   - `TELEGRAM_BOT_TOKEN` — from @BotFather
-   - `ADMIN_TELEGRAM_IDS` — your numeric Telegram ID (message [@userinfobot](https://t.me/userinfobot) to get it), comma-separated if more than one
-   - `BOT_WEBHOOK_URL` — the Render URL from step 3, e.g. `https://english-path-ai.onrender.com`
-   - `GEMINI_API_KEY` — from Google AI Studio
-4. After the first successful deploy, register the webhook once from your machine (or a Render Shell):
+The app is a single Docker image (`Dockerfile`) + a Postgres database, so it runs unmodified on any container host. Two combinations are documented below — pick one. Both need the same environment variables (see [below](#-environment-variables)).
+
+### Option A: Koyeb (web service) + Neon (database) — recommended
+
+Render's free web-service plan shares a limited monthly instance-hour/build pool across your whole account, which is easy to exhaust once you have more than one free project on it. Koyeb's free "Nano" service is a dedicated always-on instance with no shared hour pool, and Neon's free Postgres has no 30/90-day expiry (it scales to zero and wakes on connection instead of being deleted) — a more durable free combo for a bot meant to run indefinitely.
+
+1. **Database — [Neon](https://neon.tech)**: sign up (GitHub OAuth works, no card needed) → New Project → copy the connection string it gives you into `DATABASE_URL`.
+2. **Web service — [Koyeb](https://www.koyeb.com)**: sign up (GitHub OAuth, no card) → **Create Web Service** → **GitHub** → select this repo → Koyeb auto-detects the `Dockerfile` → set the **Health check path** to `/health` and the **port** to `3000`.
+3. Add the environment variables in Koyeb's service settings:
+   - `NODE_ENV=production`, `DATABASE_URL` (from Neon), `TELEGRAM_BOT_TOKEN`, `ADMIN_TELEGRAM_IDS`, `GEMINI_API_KEY`, `BOT_WEBHOOK_SECRET` (any random string, e.g. `openssl rand -hex 32`)
+   - `BOT_WEBHOOK_URL` — Koyeb gives you a public URL like `https://<app>-<org>.koyeb.app` once the first deploy finishes; add it as an env var and redeploy (or set it after the first deploy and just redeploy once more)
+4. Once deployed, apply migrations once (Koyeb's build step only runs `npm run build`; run migrations from your machine against the Neon connection string, or add `npx prisma migrate deploy` to a Koyeb deploy hook):
    ```bash
-   BOT_WEBHOOK_URL=https://english-path-ai.onrender.com \
-   BOT_WEBHOOK_SECRET=<the value Render generated> \
+   DATABASE_URL=<your Neon connection string> npx prisma migrate deploy
+   ```
+5. Register the webhook:
+   ```bash
+   BOT_WEBHOOK_URL=https://<app>-<org>.koyeb.app \
+   BOT_WEBHOOK_SECRET=<the value you set> \
    TELEGRAM_BOT_TOKEN=<your token> \
    npx tsx scripts/set-webhook.ts
    ```
-5. **Keep the free instance awake & monitored** with [UptimeRobot](https://uptimerobot.com) (free): add an HTTP(s) monitor pointed at `https://<your-service>.onrender.com/health`, checking every 5 minutes. This also means you'll get an alert by email/Telegram if the bot ever goes down.
+6. **Monitor it** with [UptimeRobot](https://uptimerobot.com) (free): HTTP(s) monitor on `https://<your-app>.koyeb.app/health`, checked every 5 minutes, so you get alerted if it ever goes down. (Koyeb's free instance doesn't sleep, so this is for alerting rather than keep-alive.)
+
+### Option B: Render (all-in-one, via `render.yaml`)
+
+Simpler if you haven't used up Render's free-tier allowance yet: **Dashboard → New → Blueprint**, point it at this repo. Render reads `render.yaml` and provisions a free web service *and* a free Postgres database together, with most environment variables pre-wired — you only need to fill in the ones marked `sync: false` (`TELEGRAM_BOT_TOKEN`, `ADMIN_TELEGRAM_IDS`, `BOT_WEBHOOK_URL`, `GEMINI_API_KEY`). Then run `scripts/set-webhook.ts` and add an UptimeRobot monitor exactly as in steps 5–6 above, pointed at your `onrender.com` URL.
 
 ### Free-tier caveats
-- Render's free web service spins down after 15 minutes of no HTTP traffic; the UptimeRobot monitor above keeps it warm. A cold start still costs the *first* webhook delivery a few seconds of latency — Telegram retries automatically.
-- Render's free Postgres is deleted after 90 days of inactivity on the free plan — take periodic backups (`pg_dump`) if you go quiet for a while, or upgrade the DB plan.
+- Render's free web service shares a monthly instance-hour/build-minute pool across your account and spins down after 15 minutes of no traffic; Render's free Postgres is deleted after 30 days of inactivity. Koyeb + Neon (Option A) avoids both.
 - Gemini's free tier has per-minute/per-day rate limits. The bot degrades gracefully (returns a friendly "try again shortly" message) rather than crashing if you hit them.
 
 ---
