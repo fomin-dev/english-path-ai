@@ -1,0 +1,393 @@
+// English Path AI — data model
+// PostgreSQL chosen for: strong relational integrity between user progress /
+// SRS state / attempts, native JSON columns for flexible content (roadmap
+// phases, test question banks), mature migration tooling via Prisma, and
+// trivial managed hosting + backups on Render/Supabase/Neon.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────
+
+enum Locale {
+  EN
+  RU
+  UK
+}
+
+enum CefrLevel {
+  A0 // absolute beginner
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum SkillFocus {
+  SPEAKING
+  LISTENING
+  READING
+  WRITING
+  GRAMMAR
+  VOCABULARY
+  PRONUNCIATION
+  IELTS
+  SAT
+  ACADEMIC
+  EVERYDAY
+  BUSINESS
+  OTHER
+}
+
+enum CardStatus {
+  NEW
+  LEARNING
+  REVIEW
+  MASTERED
+}
+
+enum TaskType {
+  GRAMMAR
+  VOCABULARY
+  READING
+  LISTENING
+  WRITING
+  TRANSLATION
+  SENTENCE_BUILDING
+  SPEAKING
+  SHADOWING
+  FLASHCARDS
+  MINI_TEST
+  REVIEW
+}
+
+enum IeltsSection {
+  LISTENING
+  READING
+  WRITING
+  SPEAKING
+  FULL_MOCK
+}
+
+enum SatSection {
+  READING
+  WRITING
+  VOCABULARY
+  GRAMMAR
+  FULL_MOCK
+}
+
+// ── Core user & progress ────────────────────────────────────────────────
+
+model User {
+  id         String  @id @default(cuid())
+  telegramId BigInt  @unique
+  username   String?
+  firstName  String?
+
+  interfaceLocale Locale @default(RU)
+  timezone        String @default("Europe/Kyiv")
+
+  currentLevel CefrLevel?
+  targetLevel  CefrLevel?
+  targetDate   DateTime?
+
+  dailyGoalMinutes Int @default(15)
+  dailyWordGoal    Int @default(10)
+  dailyXpGoal      Int @default(50)
+
+  xp        Int @default(0)
+  rankLevel Int @default(1)
+
+  streakCount    Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastActiveDate DateTime?
+
+  notificationsEnabled Boolean @default(true)
+  morningReminderTime  String? // "HH:mm" in user's timezone
+  eveningReminderTime  String? // "HH:mm" in user's timezone
+
+  isAdmin  Boolean @default(false)
+  isBanned Boolean @default(false)
+
+  onboardingStep      String?
+  onboardingCompleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  placementTests     PlacementTestResult[]
+  learningGoals      LearningGoal[]
+  roadmap            Roadmap?
+  vocabCards         UserVocabCard[]
+  grammarAttempts    GrammarAttempt[]
+  readingAttempts    ReadingAttempt[]
+  listeningAttempts  ListeningAttempt[]
+  writingSubmissions WritingSubmission[]
+  lessonPlans        LessonPlan[]
+  xpTransactions     XpTransaction[]
+  achievements       UserAchievement[]
+  streakLogs         StreakLog[]
+  ieltsAttempts      IeltsAttempt[]
+  satAttempts        SatAttempt[]
+
+  @@index([lastActiveDate])
+}
+
+model PlacementTestResult {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  level           CefrLevel
+  scoreGrammar    Float
+  scoreVocabulary Float
+  scoreReading    Float
+  scoreUsage      Float
+  vocabEstimate   Int
+  strongAreas     String[]
+  weakAreas       String[]
+  rawAnswers      Json
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model LearningGoal {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetLevel   CefrLevel
+  targetDate    DateTime
+  focusSkills   SkillFocus[]
+  weeklyMinutes Int
+  isActive      Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isActive])
+}
+
+model Roadmap {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Array of phase objects: { title, fromLevel, toLevel, weeks, focus, milestones }
+  phases            Json
+  currentPhaseIndex Int      @default(0)
+  version           Int      @default(1)
+  generatedAt       DateTime @default(now())
+  lastAdaptedAt     DateTime @default(now())
+}
+
+// ── Vocabulary & SRS ─────────────────────────────────────────────────────
+//
+// Vocabulary/grammar/reading/listening/IELTS/SAT *content* itself is NOT
+// stored in Postgres — it lives as versioned, code-reviewable TypeScript
+// data under src/content/** and ships with the app. Only per-user state
+// (SRS progress, attempts) lives in the database, referencing content by
+// its stable string key (e.g. "word::partOfSpeech", a grammar `slug`, or
+// a generated content id) instead of a foreign key. This avoids a seed
+// step entirely and means content PRs never need a migration.
+
+model UserVocabCard {
+  id      String @id @default(cuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wordKey String // `${word}::${partOfSpeech}` from src/content/vocab
+
+  // SM-2 spaced repetition state
+  easeFactor     Float      @default(2.5)
+  intervalDays   Int        @default(0)
+  repetitions    Int        @default(0)
+  lapses         Int        @default(0)
+  dueDate        DateTime   @default(now())
+  lastReviewedAt DateTime?
+  status         CardStatus @default(NEW)
+  isFavorite     Boolean    @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, wordKey])
+  @@index([userId, dueDate])
+}
+
+// ── Grammar ──────────────────────────────────────────────────────────────
+
+model GrammarAttempt {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicSlug String // from src/content/grammar topics
+
+  score          Float
+  correctAnswers Int
+  totalQuestions Int
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Reading ──────────────────────────────────────────────────────────────
+
+model ReadingAttempt {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  textId String // from src/content/reading texts
+
+  score          Float
+  correctAnswers Int
+  totalQuestions Int
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Listening ────────────────────────────────────────────────────────────
+
+model ListeningAttempt {
+  id         String @id @default(cuid())
+  userId     String
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String // from src/content/listening exercises
+
+  score          Float
+  correctAnswers Int
+  totalQuestions Int
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Writing ──────────────────────────────────────────────────────────────
+
+model WritingSubmission {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  prompt         String?
+  originalText   String
+  correctedText  String?
+  // { errors: [{ original, corrected, explanation, category }], betterVersion, strengths: [] }
+  feedback       Json?
+  estimatedLevel CefrLevel?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Daily lessons & gamification ────────────────────────────────────────
+
+model LessonPlan {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date           DateTime @db.Date
+  // [{ type: TaskType, refId, xp, status: 'pending'|'done'|'skipped' }]
+  tasks          Json
+  completedCount Int      @default(0)
+  totalCount     Int
+  xpEarned       Int      @default(0)
+
+  generatedAt DateTime @default(now())
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model XpTransaction {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount Int
+  reason String
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Achievement catalog itself lives in src/content/achievements; only the
+// unlock event is persisted, keyed by the catalog's `slug`.
+model UserAchievement {
+  id              String @id @default(cuid())
+  userId          String
+  user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementSlug String
+
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, achievementSlug])
+}
+
+model StreakLog {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date           DateTime @db.Date
+  tasksCompleted Int      @default(0)
+  goalMet        Boolean  @default(false)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+// ── Exam prep ────────────────────────────────────────────────────────────
+
+model IeltsAttempt {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  section   IeltsSection
+  bandScore Float
+  details   Json // section-specific breakdown + feedback
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SatAttempt {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  section SatSection
+  score   Int
+  details Json
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ── Bot infrastructure ──────────────────────────────────────────────────
+
+// grammY session + conversations storage (replaces in-memory storage so
+// state survives restarts/redeploys on Render's ephemeral filesystem).
+model BotSession {
+  key       String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
