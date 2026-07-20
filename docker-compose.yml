@@ -1,0 +1,30 @@
+# Local development only: spins up Postgres so you don't need a cloud DB
+# while hacking on the bot. The bot itself is still run with `npm run dev`
+# on the host (not in this compose file) so tsx watch/hot-reload works.
+#
+# Usage:
+#   docker compose up -d
+#   # then set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/english_path_ai in .env
+#   npm run prisma:migrate
+#   npm run dev
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: english_path_ai
+    ports:
+      - '5432:5432'
+    volumes:
+      - english_path_ai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  english_path_ai_pgdata:

@@ -1,0 +1,48 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploy with: Render Dashboard → New → Blueprint → point at this repo.
+# See README.md "Deployment" section for the full step-by-step guide.
+
+databases:
+  - name: english-path-ai-db
+    plan: free
+    databaseName: english_path_ai
+    user: english_path_ai
+
+services:
+  - type: web
+    name: english-path-ai
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build && npx prisma migrate deploy
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: english-path-ai-db
+          property: connectionString
+      # Everything below must be filled in manually in the Render dashboard
+      # (Environment tab) — see README.md for where to get each value.
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ADMIN_TELEGRAM_IDS
+        sync: false
+      - key: BOT_WEBHOOK_URL
+        sync: false # e.g. https://english-path-ai.onrender.com (this service's own public URL)
+      - key: BOT_WEBHOOK_SECRET
+        generateValue: true
+      - key: AI_PROVIDER
+        value: gemini
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.0-flash
+      - key: DEFAULT_TIMEZONE
+        value: Europe/Kyiv
+      - key: LOG_LEVEL
+        value: info
