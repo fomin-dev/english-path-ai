@@ -14,7 +14,10 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    buildCommand: npm ci && npm run build && npx prisma migrate deploy
+    # --include=dev is required: NODE_ENV=production (set below) makes plain
+    # `npm ci` skip devDependencies, but the build needs typescript/@types/node
+    # to compile — the compiled dist/ output is what actually ships.
+    buildCommand: npm ci --include=dev && npm run build && npx prisma migrate deploy
     startCommand: npm start
     healthCheckPath: /health
     envVars:
