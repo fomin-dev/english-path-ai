@@ -160,6 +160,105 @@ export const satReadingSets: SatReadingSet[] = [
       },
     ],
   },
+  {
+    title: 'Excerpt: The Last Ferry (fiction)',
+    passage:
+      'By the time Marcus reached the dock, the evening ferry was already pulling away, its wake spreading in slow, deliberate ripples across water gone the color of pewter. He stood there for a moment, breathing hard, more from the run than any real hope that shouting would bring it back. There would be another ferry in the morning, he reminded himself, though the reminder did little to dissolve the tightness in his chest. It wasn\'t really about the ferry. It was about the fact that he had run the last four blocks convinced that if he could just make this one connection, everything else that had gone wrong that week would somehow arrange itself into something more bearable. That, he now understood, standing alone on a mostly empty dock as the light faded from gold to grey, was not how any of this worked. He sat down on a wooden bench facing the water, pulled his jacket tighter against the wind coming off the harbor, and allowed himself, for the first time in days, to simply not be in a hurry to get anywhere.',
+    questions: [
+      {
+        question: 'Which choice best states the main idea of the passage?',
+        options: [
+          'Marcus is angry that the ferry schedule was changed without notice.',
+          'Marcus, having missed the ferry, comes to recognize that his rush to catch it was really about something deeper than transportation.',
+          'Marcus decides to swim after the ferry.',
+          'Marcus is meeting someone important on the dock.',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'As used in the passage, "dissolve" most nearly means:',
+        options: ['strengthen', 'ease', 'ignore', 'multiply'],
+        correctIndex: 1,
+      },
+      {
+        question: "The passage suggests that Marcus's reaction to missing the ferry is primarily about:",
+        options: [
+          'The financial cost of missing it',
+          'A hope that catching it would make a difficult week feel more manageable',
+          'Anger at the ferry operator',
+          'A fear of the dark',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'Which detail best supports the idea that Marcus eventually finds a measure of peace?',
+        options: [
+          'His breathing hard from running',
+          'His sitting down and allowing himself not to be in a hurry',
+          'His pulling his jacket tighter',
+          "His noticing the water's color",
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'The overall tone of the passage can best be described as:',
+        options: ['comically absurd', 'quietly reflective', 'furious and confrontational', 'purely descriptive with no emotional content'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    title: 'The Bystander Effect Reconsidered',
+    passage:
+      'For decades, a single explanation has dominated popular understanding of why people sometimes fail to help others in emergencies when many witnesses are present: the bystander effect, first documented following a widely publicized 1964 case, holds that individual responsibility becomes diffused across a group, so that each witness assumes someone else will intervene. Early laboratory experiments appeared to confirm this account, showing that participants were slower to respond to a staged emergency when they believed other bystanders were also present. More recent research, however, has complicated this tidy narrative considerably. A large 2019 analysis of real-world surveillance footage from public conflicts found that intervention rates were actually quite high — bystanders assisted in the large majority of cases studied — and that the presence of more bystanders was, if anything, weakly associated with a greater likelihood that someone would step in, not less. Researchers reconciling these seemingly contradictory findings have proposed that laboratory studies, by their nature, often place participants among strangers with no clear social bond and no opportunity to coordinate, conditions that may amplify diffusion of responsibility in ways uncommon in genuine public spaces, where a shared sense of belonging to the same situation appears to promote, rather than inhibit, collective action. This does not mean the original laboratory findings were wrong, exactly, but it does suggest that a phenomenon demonstrated reliably under controlled conditions was, for years, generalized to real-world behavior more confidently than the evidence actually warranted.',
+    questions: [
+      {
+        question: 'What is the primary purpose of the passage?',
+        options: [
+          'To argue that the bystander effect never occurs',
+          'To explain how newer real-world research has complicated the traditional understanding of the bystander effect',
+          'To describe the 1964 case in full detail',
+          'To criticize the researchers who conducted the original laboratory experiments',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'According to the passage, what did the 2019 analysis of surveillance footage find?',
+        options: [
+          'Bystanders almost never intervened',
+          'Intervention rates were high, and more bystanders were weakly associated with more intervention',
+          'Laboratory results were completely replicated',
+          'Public conflicts are rare',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What explanation do researchers propose for the difference between lab and real-world findings?',
+        options: [
+          'Real-world witnesses are less intelligent',
+          'Laboratory conditions may amplify diffusion of responsibility in ways uncommon among people who share a sense of belonging',
+          'Surveillance footage is unreliable',
+          'The bystander effect only applies to older studies',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'As used in the passage, "diffused" most nearly means:',
+        options: ['concentrated', 'spread out and weakened', 'eliminated', 'measured precisely'],
+        correctIndex: 1,
+      },
+      {
+        question: 'What does the passage conclude about the original laboratory findings?',
+        options: [
+          'They were fabricated',
+          'They were not necessarily wrong, but were generalized to real life more confidently than warranted',
+          'They have been completely disproven',
+          'They apply only to emergencies involving children',
+        ],
+        correctIndex: 1,
+      },
+    ],
+  },
 ];
 
 export const satGrammarQuestions: SatGrammarQuestion[] = [

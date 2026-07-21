@@ -152,6 +152,135 @@ export const ieltsReadingSets: IeltsReadingSet[] = [
       },
     ],
   },
+  {
+    title: 'The Economics of Fast Fashion',
+    passage:
+      'Fast fashion — the business model built around rapidly translating catwalk trends into inexpensive, mass-produced clothing — has transformed retail over the past twenty-five years, compressing what was once a months-long design-to-shelf cycle into a matter of weeks. Proponents of the model point to its evident democratising effect: clothing that would once have been accessible only to wealthier consumers is now available to nearly anyone, and the industry has created millions of manufacturing jobs, disproportionately in developing economies where alternative employment can be scarce. Critics, however, argue that these benefits obscure a set of costs that rarely appear on a price tag. Environmentally, the sheer volume of production is difficult to overstate: textile manufacturing is now estimated to account for a meaningful share of global carbon emissions, and the synthetic fibres used in many garments shed microplastics with every wash, a problem that recycling programmes have so far failed to meaningfully address. Socially, the same speed that makes fast fashion appealing to consumers places intense pressure on supply chains, and labour advocates have documented repeated instances of unsafe working conditions and wages that fall well below a living standard in garment-producing regions. A further complication, often overlooked in the debate, is that many of the jobs created are themselves precarious: contracts are frequently short-term, and factories can relocate quickly to whichever country currently offers the lowest labour costs, leaving workers with little long-term security even when conditions are otherwise acceptable. Some economists have proposed that extended producer responsibility laws, which would hold companies financially accountable for the full lifecycle of garments they sell, could realign incentives without eliminating the accessibility that made fast fashion popular in the first place. Whether such measures could be implemented at a scale sufficient to matter, however, remains an open and contested question.',
+    questions: [
+      {
+        question: 'What is the passage primarily concerned with?',
+        options: [
+          'Celebrating the rise of fast fashion',
+          'Weighing the economic and social benefits of fast fashion against its environmental and labour costs',
+          'Explaining how clothing is manufactured step by step',
+          'Arguing that fast fashion should be banned immediately',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'According to the passage, what is one argument in favour of fast fashion?',
+        options: [
+          'It reduces global carbon emissions',
+          'It has made clothing accessible to more people and created manufacturing jobs',
+          'It guarantees living wages for all workers',
+          'It has eliminated microplastic pollution',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What does the passage say about synthetic fibres?',
+        options: [
+          'They are more durable than natural fibres',
+          'They shed microplastics that recycling has so far failed to address',
+          'They are being phased out entirely',
+          'They reduce the need for washing clothes',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'The word "precarious" in the passage most nearly means:',
+        options: ['secure and stable', 'unstable and insecure', 'highly regulated', 'well compensated'],
+        correctIndex: 1,
+      },
+      {
+        question: 'What do some economists propose as a possible solution?',
+        options: [
+          'Banning synthetic fibres outright',
+          'Extended producer responsibility laws holding companies accountable for garment lifecycles',
+          'Eliminating manufacturing jobs in developing countries',
+          'Increasing production speed further',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What "further complication" regarding jobs does the passage mention?',
+        options: [
+          'Jobs in the industry pay too much',
+          'Many jobs are precarious because factories can relocate quickly to cheaper countries',
+          'There are not enough jobs created',
+          'Jobs require years of formal training',
+        ],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    title: 'Octopus Cognition',
+    passage:
+      "Octopuses present something of a puzzle for researchers interested in the evolution of intelligence. Unlike vertebrates, in which sophisticated cognition is generally associated with a centralised brain and a long evolutionary lineage shared with other intelligent species, octopuses diverged from the lineage leading to vertebrates roughly five hundred million years ago, and possess a nervous system organised in a radically different way: around two-thirds of an octopus's neurons are distributed throughout its eight arms rather than concentrated in a central brain, allowing each arm a striking degree of functional independence. An amputated octopus arm, remarkably, can continue to react to stimuli and even manipulate objects for a short period after separation from the body, a feat that would be inconceivable in a vertebrate limb. Despite — or perhaps because of — this unusual architecture, octopuses display behaviours that researchers have historically associated with advanced cognition: they can navigate mazes, open jars to reach food, and in laboratory settings, have demonstrated the ability to distinguish between individual human caretakers, sometimes squirting water preferentially at people who have treated them poorly. Some researchers argue that these abilities represent a case of convergent evolution, in which intelligence arose independently along a completely separate evolutionary path, driven by different pressures than those that shaped vertebrate cognition; for a soft-bodied animal with no protective shell, behavioural flexibility and rapid problem-solving may have been essential survival tools in a way they were not for many vertebrate lineages. Other scientists caution against over-interpreting these behaviours, noting that \"intelligence\" is notoriously difficult to define across species and that an octopus's distributed nervous system may simply produce complex-looking behaviour through mechanisms fundamentally unlike anything resembling thought as humans understand it. Whichever interpretation proves correct, the octopus's evolutionary distance from humans makes it one of the most valuable — and challenging — subjects available for studying how, and how many times, intelligence has evolved.",
+    questions: [
+      {
+        question: 'What makes octopuses valuable subjects for studying the evolution of intelligence?',
+        options: [
+          'Their close evolutionary relationship to vertebrates',
+          'Their evolutionary distance from vertebrates combined with apparently sophisticated behaviour',
+          'Their inability to solve problems',
+          'Their centralised brain structure similar to mammals',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: "How is an octopus's nervous system organised, according to the passage?",
+        options: [
+          'Entirely within a central brain',
+          'Mostly distributed throughout its eight arms',
+          'Split evenly between two brains',
+          'Located only in its eyes',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What is notable about a separated octopus arm?',
+        options: [
+          'It immediately stops functioning',
+          'It can still react to stimuli and manipulate objects briefly',
+          'It regenerates within seconds',
+          'It becomes a separate octopus',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What behaviour do octopuses show toward caretakers who have treated them poorly, according to the passage?',
+        options: [
+          'They avoid all humans equally',
+          'They sometimes squirt water preferentially at those individuals',
+          'They become more affectionate',
+          'They stop eating entirely',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What do some researchers suggest octopus intelligence represents?',
+        options: [
+          'A case of convergent evolution along a separate evolutionary path',
+          'Proof that all animals are equally intelligent',
+          'A direct evolutionary link to vertebrates',
+          'An accident with no adaptive value',
+        ],
+        correctIndex: 0,
+      },
+      {
+        question: 'What caution do other scientists raise?',
+        options: [
+          'That octopuses are not really animals',
+          '"Intelligence" is hard to define across species and complex behaviour may not resemble human-like thought',
+          'That octopuses should not be studied further',
+          'That octopus arms are not really independent',
+        ],
+        correctIndex: 1,
+      },
+    ],
+  },
 ];
 
 export const ieltsListeningSets: IeltsListeningSet[] = [
@@ -230,6 +359,75 @@ export const ieltsListeningSets: IeltsListeningSet[] = [
           'Because it is the smallest room',
           'Because there is no lighting',
         ],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    title: 'Booking a Car Rental',
+    script:
+      "Agent: Good afternoon, Riverside Car Rentals, how can I help you? Customer: Hi, I'd like to rent a car for a week, starting this Friday. Agent: Sure, what type of vehicle are you after? Customer: Something compact, just for city driving. Agent: We have a compact hatchback available at thirty-five dollars a day, or an economy model at twenty-eight dollars a day. Customer: I'll go with the economy one, that sounds fine. Agent: Great choice. Will you need insurance included? Basic insurance is included in the price, but we also offer full coverage for an extra nine dollars a day, which covers windscreen and tyre damage as well. Customer: I think I'll add the full coverage, just to be safe. Agent: No problem. And will you be returning the car to this same branch? Customer: Actually, I'll be flying out of the airport, so I'd like to drop it at the airport branch instead. Agent: That's fine, there's a small drop-off fee of fifteen dollars for a different branch. Customer: That's fine. One more thing — is there a minimum age requirement? Agent: Yes, drivers must be at least twenty-one, and under twenty-fives pay a young driver surcharge. Customer: I'm twenty-seven, so that's not a problem. Agent: Perfect, I'll get your booking confirmed and email the details shortly.",
+    questions: [
+      {
+        question: 'What type of car does the customer choose?',
+        options: ['Compact hatchback', 'Economy model', 'Luxury sedan', 'SUV'],
+        correctIndex: 1,
+      },
+      {
+        question: 'How much extra does full coverage insurance cost per day?',
+        options: ['Five dollars', 'Nine dollars', 'Fifteen dollars', 'Twenty-eight dollars'],
+        correctIndex: 1,
+      },
+      {
+        question: 'Where will the customer return the car?',
+        options: ['The same branch', 'A different city', 'The airport branch', 'They are not sure yet'],
+        correctIndex: 2,
+      },
+      {
+        question: 'Why is there an extra fee for the return?',
+        options: [
+          'The car will be returned late',
+          'It is being returned to a different branch',
+          'The customer damaged the car',
+          'Insurance was not purchased',
+        ],
+        correctIndex: 1,
+      },
+      {
+        question: 'What is the minimum age to rent a car according to the agent?',
+        options: ['Eighteen', 'Twenty-one', 'Twenty-five', 'Thirty'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    title: 'Orientation for New Library Volunteers',
+    script:
+      "Welcome, everyone, and thank you for volunteering with us at the Central Public Library. I just want to run through a few key points before we start your training. First, shifts: most of you will be scheduled for either the morning shift, from nine until noon, or the afternoon shift, from one until four. If you ever need to swap a shift with someone, just let the volunteer coordinator know at least twenty-four hours in advance so we can update the roster. Second, your main responsibilities will include shelving returned books, helping visitors locate materials using the catalogue computers near the entrance, and assisting with our weekly children's reading session, which runs every Wednesday afternoon. You are not expected to handle any technical IT issues yourselves — if a computer stops working, just note it in the logbook at the front desk and our technician will deal with it during his Tuesday visit. Third, a quick word on dress code: there isn't a strict uniform, but we do ask that you wear the green volunteer badge at all times while on shift, which you'll receive today. Finally, if you're ever unsure about anything while working, the reference desk on the second floor is staffed throughout opening hours, and the librarians there are always happy to help. We're really glad to have you all on board, and I hope you enjoy your time here.",
+    questions: [
+      {
+        question: 'What time does the morning shift end?',
+        options: ['Ten', 'Eleven', 'Noon', 'One'],
+        correctIndex: 2,
+      },
+      {
+        question: 'How much notice should volunteers give to swap a shift?',
+        options: ['No notice needed', 'At least twenty-four hours', 'One week', 'Forty-eight hours'],
+        correctIndex: 1,
+      },
+      {
+        question: "When does the children's reading session take place?",
+        options: ['Monday morning', 'Wednesday afternoon', 'Friday evening', 'Every day'],
+        correctIndex: 1,
+      },
+      {
+        question: 'What should volunteers do if a computer stops working?',
+        options: ['Fix it themselves', 'Note it in the logbook at the front desk', 'Call the technician directly', 'Ignore it'],
+        correctIndex: 1,
+      },
+      {
+        question: 'What must volunteers wear while on shift?',
+        options: ['A full uniform', 'The green volunteer badge', 'A name tag only', 'Nothing specific'],
         correctIndex: 1,
       },
     ],
