@@ -3,6 +3,7 @@ import { t } from '../../../i18n/index.js';
 import type { BotContext } from '../../types.js';
 import { aiProvider } from '../../../ai/index.js';
 import { isMenuLabel } from '../menu/match-menu-text.js';
+import { logger } from '../../../config/logger.js';
 
 export async function showTutorMenu(ctx: BotContext): Promise<void> {
   ctx.session.tutorMode = true;
@@ -25,7 +26,12 @@ export function registerTutorHandlers(bot: Bot<BotContext>): void {
     }
 
     await ctx.reply(t(locale, 'tutor.thinking'));
-    const answer = await aiProvider.explainGrammar(ctx.msg.text, locale, ctx.dbUser.currentLevel ?? 'B1');
-    await ctx.reply(answer);
+    try {
+      const answer = await aiProvider.explainGrammar(ctx.msg.text, locale, ctx.dbUser.currentLevel ?? 'B1');
+      await ctx.reply(answer);
+    } catch (err) {
+      logger.error({ err, provider: aiProvider.name }, 'AI tutor request failed');
+      await ctx.reply(t(locale, 'common.ai_error'));
+    }
   });
 }

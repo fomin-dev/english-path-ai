@@ -56,4 +56,14 @@ bot.on('message:text', async (ctx) => {
 
 bot.catch((err) => {
   logger.error({ err: err.error, updateId: err.ctx.update.update_id }, 'Unhandled bot error');
+
+  // Best-effort: let the learner know something broke instead of leaving them
+  // staring at a dead chat. Swallow any failure here — we're already in the
+  // error handler, so there's nowhere further to report a second failure to.
+  try {
+    const locale = err.ctx.session?.locale ?? 'ru';
+    err.ctx.reply(t(locale, 'common.error_generic')).catch(() => {});
+  } catch {
+    // Session itself was unreadable — nothing more we can do.
+  }
 });

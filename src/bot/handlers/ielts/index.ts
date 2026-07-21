@@ -144,13 +144,21 @@ export function registerIeltsHandlers(bot: Bot<BotContext>): void {
     }
 
     await ctx.reply(t(locale, 'writing.checking'));
-    const result = await aiProvider.checkWriting({
-      text: ctx.msg.text,
-      prompt: state.prompt,
-      learnerLevel: ctx.dbUser.currentLevel ?? 'B1',
-      locale,
-    });
     ctx.session.ieltsWriting = undefined;
+
+    let result;
+    try {
+      result = await aiProvider.checkWriting({
+        text: ctx.msg.text,
+        prompt: state.prompt,
+        learnerLevel: ctx.dbUser.currentLevel ?? 'B1',
+        locale,
+      });
+    } catch (err) {
+      logger.error({ err, provider: aiProvider.name }, 'IELTS writing check request failed');
+      await ctx.reply(t(locale, 'common.ai_error'));
+      return;
+    }
 
     const band = estimateBandFromCefr(result.estimatedLevel);
     await recordIeltsAttempt(ctx.dbUser.id, 'WRITING', band, { taskNumber: state.taskNumber });

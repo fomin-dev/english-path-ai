@@ -6,6 +6,7 @@ import { saveWritingSubmission } from '../../../db/repositories/writing.reposito
 import { awardXpAndNotify } from '../gamification/notify.js';
 import { XP_REWARDS } from '../../../core/gamification/xp.js';
 import { isMenuLabel } from '../menu/match-menu-text.js';
+import { logger } from '../../../config/logger.js';
 
 const WORDS_TO_TREAT_AS_ESSAY = 12;
 
@@ -46,15 +47,23 @@ export function registerWritingHandlers(bot: Bot<BotContext>): void {
     }
 
     await ctx.reply(t(locale, 'writing.checking'));
-    const result = await aiProvider.checkWriting({
-      text,
-      prompt: state.prompt,
-      learnerLevel: ctx.dbUser.currentLevel ?? 'B1',
-      locale,
-    });
+    ctx.session.writing = undefined;
+
+    let result;
+    try {
+      result = await aiProvider.checkWriting({
+        text,
+        prompt: state.prompt,
+        learnerLevel: ctx.dbUser.currentLevel ?? 'B1',
+        locale,
+      });
+    } catch (err) {
+      logger.error({ err, provider: aiProvider.name }, 'Writing checker request failed');
+      await ctx.reply(t(locale, 'common.ai_error'));
+      return;
+    }
 
     await saveWritingSubmission(ctx.dbUser.id, text, state.prompt, result);
-    ctx.session.writing = undefined;
 
     const errorLines = result.errors
       .map((e) => `• <s>${e.original}</s> → <b>${e.corrected}</b> — ${formatErrorCategory(locale, e.category)}: ${e.explanation}`)

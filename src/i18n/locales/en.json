@@ -10,7 +10,8 @@
     "continue": "Continue ➡️",
     "loading": "⏳ One moment…",
     "error_generic": "😕 Something went wrong. Please try again in a moment.",
-    "not_configured_ai": "🤖 The AI tutor isn't fully set up yet — this feature will appear here once it is."
+    "not_configured_ai": "🤖 The AI tutor isn't fully set up yet — this feature will appear here once it is.",
+    "ai_error": "🤖 The AI service is a bit busy right now (or hit a rate limit). Please try again in a minute."
   },
   "welcome": {
     "greeting": "👋 <b>Ласкаво просимо! Добро пожаловать! Welcome!</b>\n\nI'm <b>English Path AI</b> — your personal English tutor, right here in Telegram.\n\nPlease choose your interface language:",
