@@ -27,3 +27,7 @@ export function findUserByUsernameOrId(query: string) {
     where: numeric !== undefined ? { telegramId: numeric } : { username: query.replace(/^@/, '') },
   });
 }
+
+export function setUserBanned(userId: string, isBanned: boolean) {
+  return prisma.user.update({ where: { id: userId }, data: { isBanned } });
+}

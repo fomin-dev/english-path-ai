@@ -2,7 +2,12 @@ import type { Bot } from 'grammy';
 import { InlineKeyboard } from 'grammy';
 import { t } from '../../../i18n/index.js';
 import type { BotContext } from '../../types.js';
-import { getGlobalStats, getAllActiveUserTelegramIds, findUserByUsernameOrId } from '../../../db/repositories/admin.repository.js';
+import {
+  getGlobalStats,
+  getAllActiveUserTelegramIds,
+  findUserByUsernameOrId,
+  setUserBanned,
+} from '../../../db/repositories/admin.repository.js';
 import { isMenuLabel } from '../menu/match-menu-text.js';
 import { logger } from '../../../config/logger.js';
 
@@ -65,6 +70,20 @@ export function registerAdminHandlers(bot: Bot<BotContext>): void {
     await ctx.reply(t(ctx.session.locale, 'admin.broadcast_sent', { count: users.length, failed }));
   });
 
+  bot.callbackQuery(/^admin:(ban|unban):(.+)$/, async (ctx) => {
+    if (!ctx.dbUser.isAdmin) return ctx.answerCallbackQuery();
+    const [, action, targetUserId] = ctx.match;
+    const banned = action === 'ban';
+    await setUserBanned(targetUserId!, banned);
+    await ctx.answerCallbackQuery({ text: banned ? 'User banned.' : 'User unbanned.' });
+    await ctx.editMessageReplyMarkup({
+      reply_markup: new InlineKeyboard().text(
+        banned ? '✅ Unban' : '🚫 Ban',
+        banned ? `admin:unban:${targetUserId}` : `admin:ban:${targetUserId}`,
+      ),
+    });
+  });
+
   bot.callbackQuery('admin:broadcast:cancel', async (ctx) => {
     await ctx.answerCallbackQuery();
     ctx.session.admin = undefined;
@@ -91,8 +110,11 @@ export function registerAdminHandlers(bot: Bot<BotContext>): void {
         await ctx.reply('No user found.');
         return;
       }
+      const banAction = found.isBanned ? `admin:unban:${found.id}` : `admin:ban:${found.id}`;
+      const banLabel = found.isBanned ? '✅ Unban' : '🚫 Ban';
       await ctx.reply(
-        `ID: ${found.telegramId}\nUsername: @${found.username ?? '—'}\nLevel: ${found.currentLevel ?? '—'} → ${found.targetLevel ?? '—'}\nXP: ${found.xp} (rank ${found.rankLevel})\nStreak: ${found.streakCount} (best ${found.longestStreak})\nOnboarded: ${found.onboardingCompleted}`,
+        `ID: ${found.telegramId}\nUsername: @${found.username ?? '—'}\nLevel: ${found.currentLevel ?? '—'} → ${found.targetLevel ?? '—'}\nXP: ${found.xp} (rank ${found.rankLevel})\nStreak: ${found.streakCount} (best ${found.longestStreak})\nOnboarded: ${found.onboardingCompleted}\nBanned: ${found.isBanned}`,
+        { reply_markup: new InlineKeyboard().text(banLabel, banAction) },
       );
       return;
     }

@@ -166,7 +166,8 @@
   },
   "errors": {
     "not_onboarded": "Please finish the quick setup first — send /start.",
-    "unknown_command": "I didn't quite get that. Use the menu below 👇"
+    "unknown_command": "I didn't quite get that. Use the menu below 👇",
+    "banned": "🚫 Your access to this bot has been restricted."
   },
   "lesson": {
     "title": "📚 <b>Today's lesson — {{date}}</b>",
