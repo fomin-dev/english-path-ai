@@ -2,9 +2,27 @@
 
 **A free, open-source Telegram tutor that takes you from A2 to C1 in about a year** — with an adaptive placement test, a personal roadmap, spaced-repetition vocabulary, grammar/reading/listening/writing practice, an AI tutor, full gamification, and dedicated **IELTS Academic** and **Digital SAT** prep tracks.
 
-Built for one learner going from A2 → C1 while preparing for university admissions in the US — but designed from day one to work for anyone, in 🇬🇧 English, 🇷🇺 Russian, or 🇺🇦 Ukrainian.
+[![CI](https://github.com/fomin-dev/english-path-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/fomin-dev/english-path-ai/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](package.json)
+[![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178c6)](tsconfig.json)
+
+Built by one learner going from A2 to C1 while preparing for university admissions abroad — but designed from day one to work for anyone, in 🇬🇧 English, 🇷🇺 Russian, or 🇺🇦 Ukrainian.
 
 > Runs entirely on free tiers: Telegram Bot API, Google Gemini (free tier), a free container/web-service host (Koyeb or Render), Neon/Render free Postgres, UptimeRobot free monitoring. **$0/month to run.**
+
+---
+
+## 📌 Highlights
+
+A snapshot of what's under the hood, for anyone skimming rather than reading top to bottom:
+
+- **Strict TypeScript throughout**, zero `any` outside two documented, lint-exempted boundary points — `tsc --noEmit` and `eslint --max-warnings=0` both pass clean
+- **80+ automated tests** (unit + integration, Vitest) covering every piece of framework-agnostic domain logic — SM-2 scheduling, XP curves, streaks, achievements, the adaptive placement-test engine, roadmap generation, pace tracking, exam scoring — plus content-integrity checks that fail CI if a quiz question ever ships with a broken answer key
+- **CI on every push and PR** (GitHub Actions): lint → typecheck → test → build, against a real Postgres service container
+- **~7,300 lines of hand-written learning content**, versioned as TypeScript and reviewed like code: 24 reading texts, 20 listening exercises, 24 grammar topics, 180 vocabulary entries, a 96-question adaptive placement test, and full IELTS/SAT mock-exam banks — all spread across CEFR levels A1–C2
+- **Three fully-synced interface languages** (English, Russian, Ukrainian) — 274 translation keys each, with a test-covered fallback chain so a missing key never reaches a user as `undefined`
+- **Provider-agnostic architecture** at every integration point that tends to churn: swap the AI backend (Gemini/OpenAI/Anthropic/none), the database host, or the deployment target without touching business logic
 
 ---
 
@@ -40,7 +58,7 @@ Built for one learner going from A2 → C1 while preparing for university admiss
 ### Admin
 - Global stats (total/active users, average streak, total XP)
 - Broadcast messages to all users
-- User lookup
+- User lookup and moderation (ban/unban)
 
 ---
 
@@ -90,7 +108,7 @@ english-path-ai/
 │   └── index.ts                 # process entrypoint
 └── tests/
     ├── unit/                    # core domain logic (pure functions)
-    └── integration/
+    └── integration/              # HTTP server surface, growing over time
 ```
 
 ---
@@ -106,7 +124,7 @@ english-path-ai/
 ### Local setup
 
 ```bash
-git clone https://github.com/<your-username>/english-path-ai.git
+git clone https://github.com/fomin-dev/english-path-ai.git
 cd english-path-ai
 npm install
 
@@ -131,6 +149,7 @@ The bot runs in **long-polling mode** locally (no `BOT_WEBHOOK_URL` set) — jus
 | `npm start` | Run the compiled bot (production) |
 | `npm test` | Run the Vitest suite |
 | `npm run lint` / `npm run format` | ESLint / Prettier |
+| `npm run typecheck` | `tsc --noEmit` |
 | `npm run prisma:migrate` | Create/apply a dev migration |
 | `npm run prisma:deploy` | Apply migrations in production (no prompts) |
 | `npm run prisma:studio` | Open Prisma's DB browser GUI |
@@ -143,7 +162,7 @@ The bot runs in **long-polling mode** locally (no `BOT_WEBHOOK_URL` set) — jus
 
 The app is a single Docker image (`Dockerfile`) + a Postgres database, so it runs unmodified on any container host. Two combinations are documented below — pick one. Both need the same environment variables (see [below](#-environment-variables)).
 
-### Option A: Koyeb (web service) + Neon (database) — recommended
+### Option A: Koyeb (web service) + Neon (database) — recommended for uptime
 
 Render's free web-service plan shares a limited monthly instance-hour/build pool across your whole account, which is easy to exhaust once you have more than one free project on it. Koyeb's free "Nano" service is a dedicated always-on instance with no shared hour pool, and Neon's free Postgres has no 30/90-day expiry (it scales to zero and wakes on connection instead of being deleted) — a more durable free combo for a bot meant to run indefinitely.
 
@@ -168,6 +187,8 @@ Render's free web-service plan shares a limited monthly instance-hour/build pool
 ### Option B: Render (all-in-one, via `render.yaml`)
 
 Simpler if you haven't used up Render's free-tier allowance yet: **Dashboard → New → Blueprint**, point it at this repo. Render reads `render.yaml` and provisions a free web service *and* a free Postgres database together, with most environment variables pre-wired — you only need to fill in the ones marked `sync: false` (`TELEGRAM_BOT_TOKEN`, `ADMIN_TELEGRAM_IDS`, `BOT_WEBHOOK_URL`, `GEMINI_API_KEY`). Then run `scripts/set-webhook.ts` and add an UptimeRobot monitor exactly as in steps 5–6 above, pointed at your `onrender.com` URL.
+
+> **Your Render login and your deploy source are separate settings.** You can sign in to Render with an email/password account and independently connect a GitHub account purely for deploys ([render.com/docs/github](https://render.com/docs/github)) — Render doesn't require the two to match, and the GitHub connection can be scoped to just this repository. Auto-deploy on every push only works with a connected Git provider; deploying straight from a public repo URL is also possible, but falls back to manual/API-triggered deploys since there's no account to send push webhooks to.
 
 ### Free-tier caveats
 - Render's free web service shares a monthly instance-hour/build-minute pool across your account and spins down after 15 minutes of no traffic; Render's free Postgres is deleted after 30 days of inactivity. Koyeb + Neon (Option A) avoids both.
@@ -200,7 +221,9 @@ See [`.env.example`](.env.example) for the full annotated list. Summary:
 npm test
 ```
 
-Unit tests cover the framework-agnostic core: the SM-2 scheduler, streak logic, XP/level curve, achievement unlocking, the adaptive placement-test engine, the roadmap generator and pace evaluator, the daily lesson generator, and IELTS/SAT score estimation.
+Unit tests cover the framework-agnostic core: the SM-2 scheduler, streak logic, XP/level curve, achievement unlocking, the adaptive placement-test engine, the roadmap generator and pace evaluator, the daily lesson generator, IELTS/SAT score estimation, and the goal-completion forecast — plus integrity checks over every content bank (reading, listening, IELTS, SAT) that catch malformed quiz data (wrong option count, out-of-range answer key, duplicate titles) before it ships. Integration tests cover the HTTP server surface exercised in production (health check, webhook mount point).
+
+CI (`.github/workflows/ci.yml`) runs the full pipeline — lint, typecheck, test, build — against a real Postgres service container on every push and pull request.
 
 ---
 
