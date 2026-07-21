@@ -64,6 +64,9 @@ export interface IeltsPracticeState {
 export interface SatPracticeState {
   kind: 'reading' | 'grammar' | 'vocabulary';
   setIndex?: number;
+  /** For grammar/vocabulary: a shuffled sample of indices into the question pool,
+   * so repeat practice doesn't always show the same first N questions in the same order. */
+  order?: number[];
   index: number;
   correct: number;
   total: number;

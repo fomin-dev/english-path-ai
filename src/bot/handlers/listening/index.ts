@@ -51,18 +51,14 @@ export function registerListeningHandlers(bot: Bot<BotContext>): void {
 
     await ctx.reply(`<b>${exercise.title}</b>\n${t(locale, 'listening.play_hint')}`, { parse_mode: 'HTML' });
 
+    const startKeyboard = new InlineKeyboard().text(t(locale, 'listening.start_questions'), `listening:start:${exerciseId}`);
     try {
       const audio = await synthesizeSpeech(exercise.script, 'en');
-      await ctx.replyWithVoice(new InputFile(audio, `${exercise.id}.mp3`));
+      await ctx.replyWithVoice(new InputFile(audio, `${exercise.id}.mp3`), { reply_markup: startKeyboard });
     } catch (err) {
       logger.warn({ err, exerciseId }, 'TTS synthesis failed, falling back to text transcript');
-      await ctx.reply(exercise.script);
+      await ctx.reply(exercise.script, { reply_markup: startKeyboard });
     }
-
-    await ctx.reply(
-      t(locale, 'listening.question_progress', { current: 1, total: exercise.questions.length }),
-      { reply_markup: new InlineKeyboard().text('▶️', `listening:start:${exerciseId}`) },
-    );
   });
 
   bot.callbackQuery(/^listening:start:(.+)$/, async (ctx) => {

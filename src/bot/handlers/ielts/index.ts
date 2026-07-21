@@ -186,9 +186,7 @@ export function registerIeltsHandlers(bot: Bot<BotContext>): void {
 
   bot.callbackQuery('ielts:full_mock', async (ctx) => {
     await ctx.answerCallbackQuery();
-    await ctx.reply(
-      'A full mock covers Listening → Reading → Writing → Speaking. Work through each section from this menu one by one — your band estimate for each is saved, and your best overall estimate shows up in Statistics.',
-    );
+    await ctx.reply(t(ctx.session.locale, 'ielts.full_mock_intro'));
     await showIeltsMenu(ctx);
   });
 }

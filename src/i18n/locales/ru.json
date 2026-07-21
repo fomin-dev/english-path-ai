@@ -231,6 +231,7 @@
     "title": "📖 <b>Чтение</b>",
     "text_list_title": "Выберите текст ({{level}}):",
     "question_progress": "Вопрос {{current}} из {{total}}",
+    "start_questions": "▶️ Ответить на вопросы",
     "new_words_title": "🆕 Новые слова из текста",
     "result_title": "📊 Результат: <b>{{correct}}/{{total}}</b>",
     "add_words": "➕ Добавить слова в словарь"
@@ -240,6 +241,7 @@
     "exercise_list_title": "Выберите упражнение ({{level}}):",
     "play_hint": "🔊 Слушайте внимательно, затем ответьте на вопросы ниже.",
     "question_progress": "Вопрос {{current}} из {{total}}",
+    "start_questions": "▶️ Ответить на вопросы",
     "result_title": "📊 Результат: <b>{{correct}}/{{total}}</b>"
   },
   "writing": {
@@ -304,6 +306,7 @@
     "writing": "✍️ Writing",
     "speaking": "🗣 Speaking",
     "full_mock": "📝 Полный пробный тест",
+    "full_mock_intro": "Полный пробный тест включает Listening → Reading → Writing → Speaking. Проходите разделы по очереди через это меню — балл за каждый сохраняется, а лучший общий результат отображается в Статистике.",
     "band_score_result": "📊 Примерный балл: <b>{{band}}</b>",
     "recommendation_label": "💡 Рекомендация"
   },
@@ -315,6 +318,7 @@
     "vocabulary": "🗂 Лексика",
     "grammar": "📘 Академическая грамматика",
     "full_mock": "📝 Полный пробный тест",
+    "full_mock_intro": "Полный пробный тест включает Reading, Standard English Conventions (грамматику) и Words in Context (лексику). Проходите разделы по очереди через это меню — оценка по шкале сохраняется и суммируется в Статистике.",
     "score_result": "📊 Примерный балл: <b>{{score}}/800</b>"
   },
   "admin": {

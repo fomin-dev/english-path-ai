@@ -231,6 +231,7 @@
     "title": "📖 <b>Reading</b>",
     "text_list_title": "Choose a text ({{level}}):",
     "question_progress": "Question {{current}} of {{total}}",
+    "start_questions": "▶️ Answer the questions",
     "new_words_title": "🆕 New words from this text",
     "result_title": "📊 Result: <b>{{correct}}/{{total}}</b>",
     "add_words": "➕ Add new words to Vocabulary"
@@ -240,6 +241,7 @@
     "exercise_list_title": "Choose an exercise ({{level}}):",
     "play_hint": "🔊 Listen carefully, then answer the questions below.",
     "question_progress": "Question {{current}} of {{total}}",
+    "start_questions": "▶️ Answer the questions",
     "result_title": "📊 Result: <b>{{correct}}/{{total}}</b>"
   },
   "writing": {
@@ -304,6 +306,7 @@
     "writing": "✍️ Writing",
     "speaking": "🗣 Speaking",
     "full_mock": "📝 Full mock test",
+    "full_mock_intro": "A full mock covers Listening → Reading → Writing → Speaking. Work through each section from this menu one by one — your band estimate for each is saved, and your best overall estimate shows up in Statistics.",
     "band_score_result": "📊 Estimated band score: <b>{{band}}</b>",
     "recommendation_label": "💡 Recommendation"
   },
@@ -315,6 +318,7 @@
     "vocabulary": "🗂 Vocabulary",
     "grammar": "📘 Academic Grammar",
     "full_mock": "📝 Full mock test",
+    "full_mock_intro": "A full mock covers Reading, Standard English Conventions (Grammar), and Words in Context (Vocabulary). Work through each from this menu — your estimated scaled score for each is saved and summarized in Statistics.",
     "score_result": "📊 Estimated score: <b>{{score}}/800</b>"
   },
   "admin": {

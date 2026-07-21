@@ -14,6 +14,17 @@ function randomIndex(length: number): number {
   return Math.floor(Math.random() * length);
 }
 
+/** A random sample of `count` distinct indices in [0, length), for drawing a
+ * varied subset from a large question pool instead of always the same prefix. */
+function sampleIndices(length: number, count: number): number[] {
+  const all = Array.from({ length }, (_, i) => i);
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j]!, all[i]!];
+  }
+  return all.slice(0, count);
+}
+
 export async function showSatMenu(ctx: BotContext): Promise<void> {
   const locale = ctx.session.locale;
   const kb = new InlineKeyboard()
@@ -41,7 +52,7 @@ async function renderReadingQuestion(ctx: BotContext): Promise<void> {
 function renderGrammarQuestion(ctx: BotContext): Promise<unknown> {
   const state = ctx.session.satPractice;
   if (!state || state.kind !== 'grammar') return Promise.resolve();
-  const item = satGrammarQuestions[state.index];
+  const item = satGrammarQuestions[state.order![state.index]!];
   if (!item) return Promise.resolve();
 
   const kb = new InlineKeyboard();
@@ -52,7 +63,7 @@ function renderGrammarQuestion(ctx: BotContext): Promise<unknown> {
 function renderVocabQuestion(ctx: BotContext): Promise<unknown> {
   const state = ctx.session.satPractice;
   if (!state || state.kind !== 'vocabulary') return Promise.resolve();
-  const item = satVocabQuestions[state.index];
+  const item = satVocabQuestions[state.order![state.index]!];
   if (!item) return Promise.resolve();
 
   const kb = new InlineKeyboard();
@@ -100,14 +111,14 @@ export function registerSatHandlers(bot: Bot<BotContext>): void {
   bot.callbackQuery('sat:grammar:start', async (ctx) => {
     await ctx.answerCallbackQuery();
     const total = Math.min(PRACTICE_SET_SIZE, satGrammarQuestions.length);
-    ctx.session.satPractice = { kind: 'grammar', index: 0, correct: 0, total };
+    ctx.session.satPractice = { kind: 'grammar', index: 0, correct: 0, total, order: sampleIndices(satGrammarQuestions.length, total) };
     await renderGrammarQuestion(ctx);
   });
 
   bot.callbackQuery('sat:vocabulary:start', async (ctx) => {
     await ctx.answerCallbackQuery();
     const total = Math.min(PRACTICE_SET_SIZE, satVocabQuestions.length);
-    ctx.session.satPractice = { kind: 'vocabulary', index: 0, correct: 0, total };
+    ctx.session.satPractice = { kind: 'vocabulary', index: 0, correct: 0, total, order: sampleIndices(satVocabQuestions.length, total) };
     await renderVocabQuestion(ctx);
   });
 
@@ -122,9 +133,9 @@ export function registerSatHandlers(bot: Bot<BotContext>): void {
     if (kind === 'reading' && state.setIndex !== undefined) {
       correctIndex = satReadingSets[state.setIndex]!.questions[state.index]!.correctIndex;
     } else if (kind === 'grammar') {
-      correctIndex = satGrammarQuestions[state.index]!.correctIndex;
+      correctIndex = satGrammarQuestions[state.order![state.index]!]!.correctIndex;
     } else {
-      correctIndex = satVocabQuestions[state.index]!.correctIndex;
+      correctIndex = satVocabQuestions[state.order![state.index]!]!.correctIndex;
     }
 
     const isCorrect = answerIndex === correctIndex;
@@ -144,9 +155,7 @@ export function registerSatHandlers(bot: Bot<BotContext>): void {
 
   bot.callbackQuery('sat:full_mock', async (ctx) => {
     await ctx.answerCallbackQuery();
-    await ctx.reply(
-      'A full mock covers Reading, Standard English Conventions (Grammar), and Words in Context (Vocabulary). Work through each from this menu — your estimated scaled score for each is saved and summarized in Statistics.',
-    );
+    await ctx.reply(t(ctx.session.locale, 'sat.full_mock_intro'));
     await showSatMenu(ctx);
   });
 }

@@ -48,7 +48,7 @@ export function registerReadingHandlers(bot: Bot<BotContext>): void {
 
     await ctx.reply(`<b>${text.title}</b>\n\n${text.body}`, {
       parse_mode: 'HTML',
-      reply_markup: new InlineKeyboard().text(t(locale, 'reading.question_progress', { current: 1, total: text.questions.length }), `reading:start:${textId}`),
+      reply_markup: new InlineKeyboard().text(t(locale, 'reading.start_questions'), `reading:start:${textId}`),
     });
   });
 

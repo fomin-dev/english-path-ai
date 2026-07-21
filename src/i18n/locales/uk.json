@@ -231,6 +231,7 @@
     "title": "📖 <b>Читання</b>",
     "text_list_title": "Оберіть текст ({{level}}):",
     "question_progress": "Питання {{current}} з {{total}}",
+    "start_questions": "▶️ Відповісти на питання",
     "new_words_title": "🆕 Нові слова з тексту",
     "result_title": "📊 Результат: <b>{{correct}}/{{total}}</b>",
     "add_words": "➕ Додати слова до словника"
@@ -240,6 +241,7 @@
     "exercise_list_title": "Оберіть вправу ({{level}}):",
     "play_hint": "🔊 Слухайте уважно, потім дайте відповідь на питання нижче.",
     "question_progress": "Питання {{current}} з {{total}}",
+    "start_questions": "▶️ Відповісти на питання",
     "result_title": "📊 Результат: <b>{{correct}}/{{total}}</b>"
   },
   "writing": {
@@ -304,6 +306,7 @@
     "writing": "✍️ Writing",
     "speaking": "🗣 Speaking",
     "full_mock": "📝 Повний пробний тест",
+    "full_mock_intro": "Повний пробний тест охоплює Listening → Reading → Writing → Speaking. Проходьте розділи по черзі через це меню — бал за кожен зберігається, а найкращий загальний результат відображається у Статистиці.",
     "band_score_result": "📊 Орієнтовний бал: <b>{{band}}</b>",
     "recommendation_label": "💡 Рекомендація"
   },
@@ -315,6 +318,7 @@
     "vocabulary": "🗂 Лексика",
     "grammar": "📘 Академічна граматика",
     "full_mock": "📝 Повний пробний тест",
+    "full_mock_intro": "Повний пробний тест охоплює Reading, Standard English Conventions (граматику) та Words in Context (лексику). Проходьте розділи по черзі через це меню — оцінка за шкалою зберігається і підсумовується у Статистиці.",
     "score_result": "📊 Орієнтовний бал: <b>{{score}}/800</b>"
   },
   "admin": {
