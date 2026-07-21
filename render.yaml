@@ -5,6 +5,7 @@
 databases:
   - name: english-path-ai-db
     plan: free
+    region: oregon
     databaseName: english_path_ai
     user: english_path_ai
 
@@ -13,7 +14,12 @@ services:
     name: english-path-ai
     runtime: node
     plan: free
-    region: frankfurt
+    # Must match the database's region — Render's private network (and the
+    # dpg-... internal hostname DATABASE_URL points at) only resolves within
+    # a single region. Free-tier Postgres isn't available in every region,
+    # so pin both explicitly instead of leaving the database's region to
+    # whatever it happens to default to.
+    region: oregon
     # --include=dev is required: NODE_ENV=production (set below) makes plain
     # `npm ci` skip devDependencies, but the build needs typescript/@types/node
     # to compile — the compiled dist/ output is what actually ships.
