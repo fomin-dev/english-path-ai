@@ -1,3 +1,4 @@
+import { InputFile } from 'grammy';
 import type { Bot } from 'grammy';
 import { t } from '../../../i18n/index.js';
 import type { BotContext, VocabReviewState } from '../../types.js';
@@ -9,6 +10,7 @@ import {
   toggleFavorite,
   getFavorites,
   getAllUserWordKeys,
+  getAllUserCards,
   getCardByKey,
 } from '../../../db/repositories/vocab.repository.js';
 import { vocabWordByKey, pickNewWords, countNewWords } from '../../../content/vocab/index.js';
@@ -16,6 +18,7 @@ import { vocabMenuKeyboard, showAnswerKeyboard, gradeKeyboard } from '../../keyb
 import { awardXpAndNotify } from '../gamification/notify.js';
 import { XP_REWARDS } from '../../../core/gamification/xp.js';
 import type { ReviewGrade } from '../../../core/srs/sm2.js';
+import { buildAnkiDeck } from '../../../core/vocab-export/anki-export.js';
 
 const NEW_WORDS_BATCH_SIZE = 5;
 
@@ -126,6 +129,25 @@ async function finishSession(ctx: BotContext): Promise<void> {
   await awardXpAndNotify(ctx, xp, 'vocab_review_session', 'FLASHCARDS');
 }
 
+export async function exportVocabDeck(ctx: BotContext): Promise<void> {
+  const locale = ctx.session.locale;
+  const cards = await getAllUserCards(ctx.dbUser.id);
+  const words = cards
+    .map((card) => vocabWordByKey.get(card.wordKey))
+    .filter((w): w is NonNullable<typeof w> => Boolean(w));
+
+  if (words.length === 0) {
+    await ctx.reply(t(locale, 'vocab.export_empty'));
+    return;
+  }
+
+  const deck = buildAnkiDeck(words, locale);
+  await ctx.replyWithDocument(
+    new InputFile(Buffer.from(deck, 'utf-8'), 'english-path-vocabulary.txt'),
+    { caption: t(locale, 'vocab.export_caption', { count: words.length }) },
+  );
+}
+
 export function registerVocabHandlers(bot: Bot<BotContext>): void {
   bot.callbackQuery('vocab:review_due', async (ctx) => {
     await ctx.answerCallbackQuery();
@@ -168,6 +190,11 @@ export function registerVocabHandlers(bot: Bot<BotContext>): void {
     } else {
       await renderCardFront(ctx);
     }
+  });
+
+  bot.callbackQuery('vocab:export', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await exportVocabDeck(ctx);
   });
 
   bot.callbackQuery('vocab:favorites', async (ctx) => {

@@ -5,7 +5,8 @@ export function vocabMenuKeyboard(locale: SupportedLocale, dueCount: number, new
   const kb = new InlineKeyboard();
   if (dueCount > 0) kb.text(t(locale, 'vocab.review_due'), 'vocab:review_due').row();
   if (newCount > 0) kb.text(t(locale, 'vocab.learn_new'), 'vocab:learn_new').row();
-  kb.text(t(locale, 'vocab.favorites'), 'vocab:favorites');
+  kb.text(t(locale, 'vocab.favorites'), 'vocab:favorites').row();
+  kb.text(t(locale, 'vocab.export_anki'), 'vocab:export');
   return kb;
 }
 

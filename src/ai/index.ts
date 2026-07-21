@@ -1,6 +1,8 @@
 import { env } from '../config/env.js';
+import { AnthropicProvider } from './anthropic.provider.js';
 import { GeminiProvider } from './gemini.provider.js';
 import { NoopAIProvider } from './noop.provider.js';
+import { OpenAIProvider } from './openai.provider.js';
 import type { AIProvider } from './types.js';
 
 function createProvider(): AIProvider {
@@ -9,10 +11,14 @@ function createProvider(): AIProvider {
       if (!env.GEMINI_API_KEY) return new NoopAIProvider();
       return new GeminiProvider({ apiKey: env.GEMINI_API_KEY, model: env.GEMINI_MODEL });
     }
-    // OpenAI/Anthropic providers can be dropped in here later behind the same
-    // AIProvider interface without touching any bot handler code.
-    case 'openai':
-    case 'anthropic':
+    case 'openai': {
+      if (!env.OPENAI_API_KEY) return new NoopAIProvider();
+      return new OpenAIProvider({ apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL });
+    }
+    case 'anthropic': {
+      if (!env.ANTHROPIC_API_KEY) return new NoopAIProvider();
+      return new AnthropicProvider({ apiKey: env.ANTHROPIC_API_KEY, model: env.ANTHROPIC_MODEL });
+    }
     case 'none':
     default:
       return new NoopAIProvider();

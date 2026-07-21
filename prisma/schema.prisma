@@ -107,6 +107,9 @@ model User {
   xp        Int @default(0)
   rankLevel Int @default(1)
 
+  // Opt-in only: excluded from the leaderboard by default for privacy.
+  leaderboardOptIn Boolean @default(false)
+
   streakCount    Int       @default(0)
   longestStreak  Int       @default(0)
   lastActiveDate DateTime?

@@ -1,10 +1,12 @@
 import type { Bot } from 'grammy';
+import { InlineKeyboard } from 'grammy';
 import { t } from '../../../i18n/index.js';
 import type { BotContext } from '../../types.js';
 import { getStatsSummary } from '../../../db/repositories/stats.repository.js';
 import { getActiveGoal, getRoadmap } from '../../../db/repositories/roadmap.repository.js';
 import { evaluatePace, type RoadmapPhase } from '../../../core/roadmap/generator.js';
 import { forecastCompletionDate } from '../../../core/stats/forecast.js';
+import { showLeaderboard } from '../leaderboard/index.js';
 
 export async function showStatsMenu(ctx: BotContext): Promise<void> {
   const locale = ctx.session.locale;
@@ -43,9 +45,13 @@ export async function showStatsMenu(ctx: BotContext): Promise<void> {
     );
   }
 
-  await ctx.reply(lines.join('\n'), { parse_mode: 'HTML' });
+  const kb = new InlineKeyboard().text(t(locale, 'stats.view_leaderboard'), 'stats:leaderboard');
+  await ctx.reply(lines.join('\n'), { parse_mode: 'HTML', reply_markup: kb });
 }
 
-export function registerStatsHandlers(_bot: Bot<BotContext>): void {
-  // Statistics is a read-only view — no callback/message handlers needed beyond the menu entry point.
+export function registerStatsHandlers(bot: Bot<BotContext>): void {
+  bot.callbackQuery('stats:leaderboard', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await showLeaderboard(ctx);
+  });
 }

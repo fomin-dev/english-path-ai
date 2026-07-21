@@ -15,6 +15,7 @@ import { registerLessonHandlers } from './handlers/lessons/index.js';
 import { registerIeltsHandlers } from './handlers/ielts/index.js';
 import { registerSatHandlers } from './handlers/sat/index.js';
 import { registerStatsHandlers } from './handlers/stats/index.js';
+import { registerLeaderboardHandlers } from './handlers/leaderboard/index.js';
 import { registerSettingsHandlers } from './handlers/settings/index.js';
 import { registerAdminHandlers } from './handlers/admin/index.js';
 import type { BotContext, SessionData } from './types.js';
@@ -43,6 +44,7 @@ registerTutorHandlers(bot);
 registerIeltsHandlers(bot);
 registerSatHandlers(bot);
 registerStatsHandlers(bot);
+registerLeaderboardHandlers(bot);
 registerSettingsHandlers(bot);
 registerAdminHandlers(bot);
 

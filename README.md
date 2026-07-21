@@ -19,7 +19,7 @@ Built for one learner going from A2 → C1 while preparing for university admiss
 
 ### Daily learning loop
 - A fresh **daily lesson** each day — a mix of Grammar, Vocabulary, Reading, Listening, Writing, Translation, Sentence Building, Speaking, Shadowing, Flashcards and Mini Tests, sized to the learner's daily time budget and weighted toward their chosen focus skills
-- **Spaced repetition vocabulary trainer** (SM-2 algorithm) with example sentences, synonyms/antonyms, IPA pronunciation, favorites, and free TTS playback
+- **Spaced repetition vocabulary trainer** (SM-2 algorithm) with example sentences, synonyms/antonyms, IPA pronunciation, favorites, free TTS playback, and one-tap **Anki export** of the learner's deck
 - **Grammar trainer**: every topic (A1→C2) has an explanation in the learner's own language, English examples, and a practice quiz
 - **Reading** library with comprehension questions and new-word extraction, scaled by CEFR level
 - **Listening** exercises with free TTS-generated audio + comprehension questions
@@ -30,6 +30,7 @@ Built for one learner going from A2 → C1 while preparing for university admiss
 - XP economy with a quadratic level curve and rank titles (Newcomer → Virtuoso)
 - Duolingo-style daily **streaks**, timezone-aware, with an "about to break" warning
 - **Achievements** (streaks, words learned, XP, level, writing submissions, grammar mastery, exam attempts…)
+- **Opt-in leaderboard**: top 10 learners by XP, plus your own rank — off by default, on only if you choose to be shown
 - **Statistics** dashboard: days learning, streak, words learned/mastered, tasks completed, level/XP, and a goal-completion forecast (ahead / on track / behind)
 
 ### Exam prep
@@ -186,6 +187,8 @@ See [`.env.example`](.env.example) for the full annotated list. Summary:
 | `BOT_WEBHOOK_URL` / `BOT_WEBHOOK_SECRET` | – (prod only) | Leave unset for local long-polling |
 | `AI_PROVIDER` | – | `gemini` (default) \| `openai` \| `anthropic` \| `none` |
 | `GEMINI_API_KEY` / `GEMINI_MODEL` | – | Free-tier Gemini credentials/model |
+| `OPENAI_API_KEY` / `OPENAI_MODEL` | – | Used only when `AI_PROVIDER=openai` |
+| `ANTHROPIC_API_KEY` / `ANTHROPIC_MODEL` | – | Used only when `AI_PROVIDER=anthropic` |
 | `DEFAULT_TIMEZONE` | – | Fallback timezone for new users |
 | `LOG_LEVEL` | – | `trace`\|`debug`\|`info`\|`warn`\|`error` |
 
@@ -205,11 +208,12 @@ Unit tests cover the framework-agnostic core: the SM-2 scheduler, streak logic, 
 
 - [ ] Real ASR-based Speaking auto-scoring (currently: cue cards + self-assessment, since free speech-to-text is out of scope for v1)
 - [ ] Web dashboard (progress charts, vocabulary export/import, cross-device view)
-- [ ] Leaderboards / friend leaderboards, opt-in
-- [ ] Anki-compatible vocabulary export
+- [x] Global leaderboard, opt-in (top 10 by XP + your rank)
+- [ ] Friend leaderboards (opt-in leaderboard scoped to a friend group)
+- [x] Anki-compatible vocabulary export
 - [ ] More content: this ships with a curated starter bank (grammar topics, vocab, reading/listening texts, IELTS/SAT sets) — it's intentionally easy to extend since it's just versioned TypeScript under `src/content/**`
 - [ ] Additional interface languages
-- [ ] Pluggable OpenAI/Anthropic `AIProvider` implementations alongside Gemini
+- [x] Pluggable OpenAI/Anthropic `AIProvider` implementations alongside Gemini
 
 Contributions welcome — please open an issue to discuss significant changes first.
 

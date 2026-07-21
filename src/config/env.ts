@@ -4,8 +4,9 @@ import { z } from 'zod';
 // Render (and most other hosts) inject env vars directly into the process,
 // so this is a no-op there; locally it loads `.env` for `npm run dev` /
 // `node dist/index.js` alike. Never overrides variables already set in the
-// real environment.
-loadDotenv();
+// real environment. `quiet` suppresses dotenv's stdout banner (including its
+// rotating promotional "tip" line) so it doesn't pollute production logs.
+loadDotenv({ quiet: true });
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -33,7 +34,9 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string().optional().or(z.literal('')),
   GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
   OPENAI_API_KEY: z.string().optional().or(z.literal('')),
+  OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   ANTHROPIC_API_KEY: z.string().optional().or(z.literal('')),
+  ANTHROPIC_MODEL: z.string().default('claude-sonnet-5'),
 
   LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error']).default('info'),
   DEFAULT_TIMEZONE: z.string().default('Europe/Kyiv'),

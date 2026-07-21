@@ -211,7 +211,10 @@
     "antonyms_label": "Antonyms",
     "session_summary_title": "✅ <b>Session complete</b>",
     "session_summary_body": "Reviewed {{count}} cards · +{{xp}} XP",
-    "no_cards_due": "No cards due right now — great job staying on top of reviews! Try \"Learn new words\" instead."
+    "no_cards_due": "No cards due right now — great job staying on top of reviews! Try \"Learn new words\" instead.",
+    "export_anki": "📤 Export to Anki",
+    "export_empty": "Your deck is empty — learn a few words first, then export them to Anki.",
+    "export_caption": "🗂 {{count}} cards, ready for Anki.\n\nIn Anki: File → Import, pick this file, and make sure \"Allow HTML in fields\" is checked."
   },
   "grammar": {
     "title": "📘 <b>Grammar trainer</b>",
@@ -273,7 +276,18 @@
     "goal_progress": "🎯 Goal: {{currentLevel}} → {{targetLevel}} by {{date}}",
     "goal_forecast_on_track": "You're on track to reach your goal on time! 👏",
     "goal_forecast_ahead": "You're ahead of schedule — amazing pace! 🚀",
-    "goal_forecast_behind": "You're a bit behind schedule. A few extra sessions this week will help. 💪"
+    "goal_forecast_behind": "You're a bit behind schedule. A few extra sessions this week will help. 💪",
+    "view_leaderboard": "🏆 Leaderboard"
+  },
+  "leaderboard": {
+    "title": "🏆 <b>Leaderboard</b> (top 10 by XP)",
+    "empty": "Nobody has opted in yet — be the first!",
+    "you_marker": "(you)",
+    "your_rank": "Your rank: <b>#{{rank}}</b> · {{xp}} XP",
+    "opt_in": "👋 Show me on the leaderboard",
+    "opt_out": "🙈 Hide me from the leaderboard",
+    "opted_in": "You're now on the leaderboard!",
+    "opted_out": "You've been removed from the leaderboard."
   },
   "reminders": {
     "morning_text": "☀️ Good morning, {{name}}! Ready for today's English lesson? It only takes {{minutes}} minutes.",

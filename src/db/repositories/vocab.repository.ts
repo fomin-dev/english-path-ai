@@ -79,6 +79,10 @@ export async function getAllUserWordKeys(userId: string): Promise<Set<string>> {
   return new Set(cards.map((c) => c.wordKey));
 }
 
+export function getAllUserCards(userId: string) {
+  return prisma.userVocabCard.findMany({ where: { userId }, orderBy: { wordKey: 'asc' } });
+}
+
 export function getCardByKey(userId: string, wordKey: string) {
   return prisma.userVocabCard.findUnique({ where: { userId_wordKey: { userId, wordKey } } });
 }
