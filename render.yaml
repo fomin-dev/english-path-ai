@@ -17,8 +17,12 @@ services:
     # --include=dev is required: NODE_ENV=production (set below) makes plain
     # `npm ci` skip devDependencies, but the build needs typescript/@types/node
     # to compile — the compiled dist/ output is what actually ships.
-    buildCommand: npm ci --include=dev && npm run build && npx prisma migrate deploy
-    startCommand: npm start
+    buildCommand: npm ci --include=dev && npm run build
+    # Migrations run at startup, not in buildCommand: Render's build step runs
+    # in an isolated environment without private-network access to the
+    # database (a free-tier Postgres's internal hostname resolves only at
+    # runtime), so `prisma migrate deploy` has to happen here instead.
+    startCommand: npx prisma migrate deploy && npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
