@@ -32,7 +32,7 @@ const envSchema = z.object({
 
   AI_PROVIDER: z.enum(['gemini', 'openai', 'anthropic', 'none']).default('gemini'),
   GEMINI_API_KEY: z.string().optional().or(z.literal('')),
-  GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
+  GEMINI_MODEL: z.string().default('gemini-3.1-flash-lite'),
   OPENAI_API_KEY: z.string().optional().or(z.literal('')),
   OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   ANTHROPIC_API_KEY: z.string().optional().or(z.literal('')),
