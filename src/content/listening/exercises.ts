@@ -126,4 +126,197 @@ Candidate: Yes, that wouldn't be a problem at all.`,
     ],
     newWords: ['riddled with', 'asymmetry', 'anchoring effect', 'disproportionately', 'cognition'],
   },
+  {
+    level: 'A1',
+    title: 'Buying Tickets at the Cinema',
+    script: `Clerk: Hello! How can I help you?
+Ben: Hi. Two tickets for the seven o'clock film, please.
+Clerk: Sure. Would you like the big screen or the small screen?
+Ben: The big screen, please.
+Clerk: OK, two tickets, big screen, seven o'clock. That's sixteen dollars.
+Ben: Here you are.
+Clerk: Thank you. Enjoy the film!`,
+    questions: [
+      { question: 'What time is the film?', options: ['Six o\'clock', 'Seven o\'clock', 'Eight o\'clock', 'Nine o\'clock'], correctIndex: 1 },
+      { question: 'How many tickets does Ben buy?', options: ['One', 'Two', 'Three', 'Four'], correctIndex: 1 },
+      { question: 'How much does he pay?', options: ['Six dollars', 'Ten dollars', 'Sixteen dollars', 'Twenty dollars'], correctIndex: 2 },
+    ],
+    newWords: ['ticket', 'screen', 'enjoy', 'clerk', "o'clock"],
+  },
+  {
+    level: 'A1',
+    title: 'A Phone Call with a Friend',
+    script: `Maria: Hello?
+Jake: Hi Maria, it's Jake. Are you busy right now?
+Maria: No, not really. What's up?
+Jake: I'm at the supermarket. Do we need milk at home?
+Maria: Yes, please! And can you get some apples too?
+Jake: Sure, no problem. Anything else?
+Maria: No, that's all. Thank you, Jake!
+Jake: OK, see you soon. Bye!
+Maria: Bye!`,
+    questions: [
+      { question: 'Where is Jake?', options: ['At home', 'At the supermarket', 'At school', 'At work'], correctIndex: 1 },
+      { question: 'What does Maria ask for first?', options: ['Bread', 'Milk', 'Eggs', 'Apples'], correctIndex: 1 },
+      { question: 'What else does she want?', options: ['Apples', 'Bananas', 'Bread', 'Cheese'], correctIndex: 0 },
+    ],
+    newWords: ['busy', 'supermarket', 'apples', 'anything else', 'no problem'],
+  },
+  {
+    level: 'A2',
+    title: "At the Doctor's",
+    script: `Doctor: Good morning. What seems to be the problem?
+Patient: Good morning, doctor. I have a headache and a sore throat since yesterday.
+Doctor: Do you have a fever?
+Patient: A little, I think. I feel quite tired too.
+Doctor: OK, let me check. ... Your throat is a bit red. I think it's just a cold.
+Patient: Should I take any medicine?
+Doctor: Yes, take these tablets twice a day, and drink plenty of water. Rest for two or three days.
+Patient: Thank you, doctor.
+Doctor: You're welcome. Come back if you don't feel better next week.`,
+    questions: [
+      { question: "What are the patient's symptoms?", options: ['Stomach ache and cough', 'Headache and sore throat', 'A broken arm', 'Toothache'], correctIndex: 1 },
+      { question: 'What does the doctor think it is?', options: ['Flu', 'A cold', 'An allergy', 'Nothing at all'], correctIndex: 1 },
+      { question: 'How often should the patient take the tablets?', options: ['Once a day', 'Twice a day', 'Three times a day', 'Only at night'], correctIndex: 1 },
+    ],
+    newWords: ['headache', 'sore throat', 'fever', 'tablets', 'plenty of'],
+  },
+  {
+    level: 'A2',
+    title: 'Ordering Food for Delivery',
+    script: `Operator: Thanks for calling Luigi's Pizza. What can I get for you?
+Customer: Hi, I'd like to order a large pepperoni pizza, please.
+Operator: Sure. Would you like anything to drink with that?
+Customer: Yes, a bottle of cola, please.
+Operator: Great. And what's the delivery address?
+Customer: Twelve Oak Street, near the park.
+Operator: OK. That will be about thirty minutes. The total is eighteen dollars.
+Customer: Perfect, thank you.
+Operator: Thank you for your order. Have a good evening!`,
+    questions: [
+      { question: 'What size pizza does the customer order?', options: ['Small', 'Medium', 'Large', 'Extra large'], correctIndex: 2 },
+      { question: 'What drink do they order?', options: ['Water', 'Juice', 'Cola', 'Coffee'], correctIndex: 2 },
+      { question: 'How long will delivery take?', options: ['Fifteen minutes', 'Thirty minutes', 'One hour', 'Two hours'], correctIndex: 1 },
+    ],
+    newWords: ['delivery', 'address', 'pepperoni', 'total', 'order'],
+  },
+  {
+    level: 'B1',
+    title: 'Talking About a Holiday',
+    script: `Dan: How was your trip to Portugal last month?
+Ellie: It was amazing, actually. We spent the first few days in Lisbon, just walking around and trying different foods.
+Dan: I've heard the food there is great. What did you try?
+Ellie: Loads of seafood, and this custard tart called pastel de nata — I'm still thinking about it.
+Dan: Sounds delicious. Did you travel outside the city as well?
+Ellie: Yes, we took a train to the coast for a couple of days and just relaxed on the beach. It was exactly what I needed after such a busy year at work.
+Dan: That sounds perfect. Would you go back?
+Ellie: Definitely. I'd love to see more of the north next time.`,
+    questions: [
+      { question: 'Where did Ellie spend her holiday?', options: ['Spain', 'Portugal', 'Italy', 'Greece'], correctIndex: 1 },
+      { question: 'What food does she mention especially?', options: ['Pizza', 'Pastel de nata', 'Paella', 'Croissants'], correctIndex: 1 },
+      { question: 'What did she do on the coast?', options: ['Went shopping', 'Relaxed on the beach', 'Visited a museum', 'Worked remotely'], correctIndex: 1 },
+    ],
+    newWords: ['loads of', 'custard tart', 'coast', 'relaxed', 'definitely'],
+  },
+  {
+    level: 'B1',
+    title: 'Returning a Faulty Product',
+    script: `Assistant: Hi there, how can I help you today?
+Customer: Hi, I bought this blender last week, and it stopped working after just two days.
+Assistant: I'm sorry to hear that. Do you still have the receipt?
+Customer: Yes, here it is.
+Assistant: Thank you. Would you prefer a refund or a replacement?
+Customer: I think I'd like a replacement, if that's possible.
+Assistant: Of course, we have the same model in stock. Let me get one for you.
+Customer: Great, thank you for sorting this out so quickly.
+Assistant: No problem at all. Sorry again for the inconvenience.`,
+    questions: [
+      { question: 'What product is the customer returning?', options: ['A toaster', 'A blender', 'A kettle', 'A microwave'], correctIndex: 1 },
+      { question: 'Why is the customer unhappy?', options: ['It was too expensive', 'It stopped working', 'It was the wrong color', 'It arrived late'], correctIndex: 1 },
+      { question: 'What does the customer choose?', options: ['A refund', 'A replacement', 'A repair', 'Store credit'], correctIndex: 1 },
+    ],
+    newWords: ['faulty', 'receipt', 'refund', 'replacement', 'in stock'],
+  },
+  {
+    level: 'B2',
+    title: 'A Restaurant Complaint',
+    script: `Manager: Good evening, is everything alright with your meal?
+Guest: Actually, no. I ordered the steak medium-rare, but this is well done, and it's been sitting here for quite a while.
+Manager: I do apologize for that. Let me take it back to the kitchen and have a fresh one prepared right away.
+Guest: I'd appreciate that. This is meant to be a special occasion, so I was hoping for a bit more attention to detail.
+Manager: Completely understandable, and I'm sorry it hasn't been up to standard. I'll also speak with the chef about the wait time. In the meantime, may I offer you a complimentary drink while you wait?
+Guest: That would be nice, thank you.
+Manager: Of course. I'll have your new steak out within ten minutes.`,
+    questions: [
+      { question: "What is the guest's complaint?", options: ['The food was cold', 'The steak was overcooked', 'The service was too slow', 'The bill was wrong'], correctIndex: 1 },
+      { question: 'What does the manager offer while the guest waits?', options: ['A discount', 'A free dessert', 'A complimentary drink', 'A refund'], correctIndex: 2 },
+      { question: 'What kind of occasion is this for the guest?', options: ['A business meeting', 'A special occasion', 'A quick lunch', 'A first date'], correctIndex: 1 },
+    ],
+    newWords: ['medium-rare', 'complimentary', 'up to standard', 'occasion', 'attention to detail'],
+  },
+  {
+    level: 'B2',
+    title: 'University Orientation Talk',
+    script: `Welcome, everyone, to orientation week! Over the next few days, you'll get a chance to explore campus, meet your academic advisors, and register for classes. I want to highlight a few things that will make your first semester much smoother. First, make sure you activate your student email as soon as possible — that's how the university will contact you about deadlines and events. Second, the library offers free workshops on academic writing and research skills throughout the semester; I'd strongly recommend attending at least one, even if you feel confident already. Finally, don't underestimate how much joining a club or society can help you settle in — it's one of the easiest ways to make friends outside your course. If you have any questions at all during the week, our student ambassadors in the blue T-shirts are here to help.`,
+    questions: [
+      { question: 'What should students do as soon as possible?', options: ['Join a club', 'Activate their student email', 'Choose a major', 'Meet the dean'], correctIndex: 1 },
+      { question: 'What does the library offer?', options: ['Free meals', 'Free workshops on writing and research', 'Free textbooks', 'Free printing'], correctIndex: 1 },
+      { question: 'How can students recognize the ambassadors?', options: ['By their name tags', 'By their blue T-shirts', 'By their clipboards', 'By their badges'], correctIndex: 1 },
+    ],
+    newWords: ['orientation', 'advisor', 'semester', 'underestimate', 'settle in'],
+  },
+  {
+    level: 'C1',
+    title: 'Interview with an Entrepreneur',
+    script: `Host: You started your company with almost no funding. Looking back, what do you think made the biggest difference in those early days?
+Guest: Honestly, I think it was our willingness to talk to customers constantly, even before we had a finished product. We'd show people rough prototypes and just watch how they reacted, rather than asking them what they wanted, because people are often better at reacting than predicting.
+Host: That's an interesting distinction. Did that approach ever lead you somewhere you didn't expect?
+Guest: Absolutely. We originally built the product for freelancers, but we noticed small agencies kept using it in ways we hadn't anticipated, so we pivoted the whole roadmap around that instead. If we'd stuck rigidly to our original plan, I doubt we'd still be around.
+Host: What advice would you give to someone starting out today?
+Guest: Stay obsessively close to your users, and treat your first plan as a hypothesis, not a commitment.`,
+    questions: [
+      { question: 'What did the guest prioritize in the early days?', options: ['Raising funding', 'Talking to customers constantly', 'Hiring quickly', 'Advertising heavily'], correctIndex: 1 },
+      { question: 'Why does the guest prefer watching reactions over asking what people want?', options: ["It's cheaper", 'People are better at reacting than predicting', "It's faster", 'Customers dislike surveys'], correctIndex: 1 },
+      { question: 'Who did the company end up building the product for?', options: ['Freelancers only', 'Small agencies', 'Large corporations', 'Students'], correctIndex: 1 },
+    ],
+    newWords: ['prototype', 'pivoted', 'roadmap', 'obsessively', 'hypothesis'],
+  },
+  {
+    level: 'C1',
+    title: 'News Report on Renewable Energy',
+    script: `In today's business news, a new report suggests that renewable energy sources overtook fossil fuels for the first time in electricity generation across several major economies last quarter. Analysts attribute this shift to a combination of falling costs for solar and wind installations and increased government investment in grid infrastructure needed to handle variable energy supply. However, experts caution that the transition is far from complete. Storage technology, they note, remains the critical bottleneck — without significantly better and cheaper batteries, grids will continue to rely on fossil fuel backup during periods of low wind and sunlight. The report also highlights that emerging economies face steeper challenges, since much of the existing infrastructure investment has been concentrated in wealthier nations. Still, the overall trend is described as encouraging, with several analysts revising their long-term forecasts for renewable adoption upward.`,
+    questions: [
+      { question: 'What milestone does the report describe?', options: ['Renewables overtaking fossil fuels in electricity generation', 'Fossil fuels becoming cheaper', 'A ban on coal power', 'A new solar technology breakthrough'], correctIndex: 0 },
+      { question: 'What do experts say is the critical bottleneck?', options: ['Government funding', 'Storage technology', 'Public opinion', 'Wind turbine design'], correctIndex: 1 },
+      { question: 'What challenge do emerging economies face?', options: ['Too much investment', 'Concentrated infrastructure investment in wealthier nations', 'Lack of renewable resources', 'Overregulation'], correctIndex: 1 },
+    ],
+    newWords: ['overtook', 'grid infrastructure', 'bottleneck', 'adoption', 'variable'],
+  },
+  {
+    level: 'C2',
+    title: 'Panel Discussion: Artificial Intelligence Ethics',
+    script: `Moderator: One recurring tension in this field is between innovation speed and regulatory caution. How do you each approach that trade-off?
+Panelist A: I'd push back slightly on the premise that it's a strict trade-off at all. Well-designed regulation doesn't necessarily slow innovation — it can channel it toward applications that are more likely to be adopted sustainably, because they've earned public trust.
+Panelist B: I largely agree, though I'd add that the pace of technical progress right now makes it genuinely difficult for regulatory frameworks to keep up. By the time a policy is drafted, debated, and implemented, the underlying technology has often changed substantially.
+Moderator: So where does that leave policymakers?
+Panelist B: I think it argues for more adaptive, principle-based regulation rather than highly prescriptive rules tied to today's specific technical architecture — rules that can flex as the technology evolves, rather than becoming obsolete within a year or two.
+Panelist A: Exactly, and that requires regulators who genuinely understand the technology, which is its own considerable challenge.`,
+    questions: [
+      { question: 'What tension does the moderator raise?', options: ['Cost versus quality', 'Innovation speed versus regulatory caution', 'Public versus private funding', 'Domestic versus international policy'], correctIndex: 1 },
+      { question: 'What does Panelist A argue about regulation?', options: ['It always slows innovation', 'It can channel innovation toward sustainably adopted applications', 'It is unnecessary', 'It should be avoided entirely'], correctIndex: 1 },
+      { question: 'What kind of regulation does Panelist B advocate for?', options: ['Highly prescriptive rules', 'Adaptive, principle-based regulation', 'No regulation at all', 'Regulation written only by engineers'], correctIndex: 1 },
+    ],
+    newWords: ['prescriptive', 'obsolete', 'adaptive', 'premise', 'sustainably'],
+  },
+  {
+    level: 'C2',
+    title: 'Lecture: The Philosophy of Language',
+    script: `This week, I want to turn to a question that has occupied philosophers of language for over a century: what exactly happens when we successfully communicate meaning to another person? One influential tradition, associated with the later work of Wittgenstein, argues that meaning is not some fixed mental entity transferred from speaker to listener, but rather something constituted by use — by the particular role a word or phrase plays within a shared practice, or what he termed a "language game." This stands in contrast to earlier referential theories, which held that words function primarily by pointing to objects or concepts in the world. The use-based view has considerable explanatory power; it accounts neatly for why context so dramatically shapes interpretation, and why seemingly nonsensical utterances can become perfectly meaningful within the right shared practice. Critics, however, argue that it struggles to explain how entirely novel sentences, never previously uttered within any established practice, can nonetheless be understood immediately by competent speakers.`,
+    questions: [
+      { question: 'What view is associated with the later Wittgenstein?', options: ['Meaning as a fixed mental entity', 'Meaning constituted by use within a language game', 'Meaning as pure reference to objects', 'Meaning as untranslatable'], correctIndex: 1 },
+      { question: 'What do referential theories claim?', options: ['Words function primarily by pointing to objects or concepts', 'Words have no fixed meaning', 'Meaning depends only on context', 'Meaning is entirely subjective'], correctIndex: 0 },
+      { question: 'What is the main criticism of the use-based view mentioned?', options: ['It cannot explain novel sentences being understood immediately', 'It is too simple', 'It ignores context entirely', 'It was never influential'], correctIndex: 0 },
+    ],
+    newWords: ['constituted', 'utterance', 'referential', 'novel (new)', 'competent speakers'],
+  },
 ];
