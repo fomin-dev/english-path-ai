@@ -11,6 +11,8 @@ Built by one learner going from A2 to C1 while preparing for university admissio
 
 > Runs entirely on free tiers: Telegram Bot API, Google Gemini (free tier), a free container/web-service host (Koyeb or Render), Neon/Render free Postgres, UptimeRobot free monitoring. **$0/month to run.**
 
+**Contents:** [Highlights](#-highlights) · [Features](#-features) · [Architecture](#-architecture) · [Getting started](#-getting-started) · [Deployment](#-deployment) · [Environment variables](#-environment-variables) · [Testing](#-testing) · [Roadmap](#-roadmap) · [License](#-license)
+
 ---
 
 ## 📌 Highlights
@@ -63,6 +65,40 @@ A snapshot of what's under the hood, for anyone skimming rather than reading top
 ---
 
 ## 🏗 Architecture
+
+```mermaid
+flowchart TB
+    TG["Telegram Bot API"]
+
+    subgraph App["english-path-ai (Node.js / Hono)"]
+        HTTP["Hono HTTP server<br/>GET /health · POST /webhook/:secret"]
+        Bot["grammY bot<br/>(long-polling locally, webhook in prod)"]
+        Handlers["Feature handlers<br/>onboarding · lessons · vocabulary · grammar · reading ·<br/>listening · writing · tutor · IELTS · SAT · admin"]
+        Core["core/**<br/>framework-agnostic domain logic<br/>SM-2 · roadmap · gamification · exam scoring"]
+        Content["content/**<br/>versioned static content (TS, not DB)"]
+        Repos["db/repositories/**"]
+        AIIface["AIProvider interface"]
+        Cron["node-cron<br/>reminders · streak maintenance"]
+    end
+
+    PG[("PostgreSQL<br/>(Neon / Render)")]
+    Gemini["Gemini"]
+    OpenAI["OpenAI"]
+    Anthropic["Anthropic"]
+    Uptime["UptimeRobot"]
+
+    TG <--> HTTP
+    HTTP --> Bot --> Handlers
+    Handlers --> Core
+    Handlers --> Content
+    Handlers --> Repos --> PG
+    Handlers --> AIIface
+    AIIface --> Gemini
+    AIIface -.-> OpenAI
+    AIIface -.-> Anthropic
+    Cron --> Repos
+    Uptime -. GET /health every 5 min .-> HTTP
+```
 
 | Concern | Choice | Why |
 |---|---|---|
@@ -158,9 +194,9 @@ The bot runs in **long-polling mode** locally (no `BOT_WEBHOOK_URL` set) — jus
 
 ---
 
-## 🌍 Deployment (free tier)
+## 🌍 Deployment
 
-The app is a single Docker image (`Dockerfile`) + a Postgres database, so it runs unmodified on any container host. Two combinations are documented below — pick one. Both need the same environment variables (see [below](#-environment-variables)).
+The app is a single Docker image (`Dockerfile`) + a Postgres database, so it runs unmodified on any container host, entirely on free tiers. Two combinations are documented below — pick one. Both need the same environment variables (see [below](#-environment-variables)).
 
 ### Option A: Koyeb (web service) + Neon (database) — recommended for uptime
 
@@ -191,8 +227,18 @@ Simpler if you haven't used up Render's free-tier allowance yet: **Dashboard →
 > **Your Render login and your deploy source are separate settings.** You can sign in to Render with an email/password account and independently connect a GitHub account purely for deploys ([render.com/docs/github](https://render.com/docs/github)) — Render doesn't require the two to match, and the GitHub connection can be scoped to just this repository. Auto-deploy on every push only works with a connected Git provider; deploying straight from a public repo URL is also possible, but falls back to manual/API-triggered deploys since there's no account to send push webhooks to.
 
 ### Free-tier caveats
-- Render's free web service shares a monthly instance-hour/build-minute pool across your account and spins down after 15 minutes of no traffic; Render's free Postgres is deleted after 30 days of inactivity. Koyeb + Neon (Option A) avoids both.
+- Render's free web service shares a monthly instance-hour/build-minute pool across your account and spins down after 15 minutes of no traffic; Render's free Postgres is deleted after 30 days of inactivity. Koyeb + Neon (Option A) avoids both. On Render, an UptimeRobot monitor checking every 5 minutes (< the 15-minute spin-down window) doubles as a keep-alive, not just an alert.
 - Gemini's free tier has per-minute/per-day rate limits. The bot degrades gracefully (returns a friendly "try again shortly" message) rather than crashing if you hit them.
+
+### Troubleshooting a Render Blueprint deploy
+
+`render.yaml` is already set up to avoid all three of these — they're documented here (and inline in the file) for anyone customizing it:
+
+- **`P1001: Can't reach database server` during `prisma migrate deploy`.** Render's build step runs in an isolated environment without private-network access to the database, and a free-tier Postgres instance's internal `dpg-...` hostname only resolves at runtime, from the actual running service. Migrations run in `startCommand`, not `buildCommand`.
+- **The same error even at runtime, in every region except one.** Render's private network — and that internal `dpg-...` hostname — only resolves *within a single region*. Free-tier Postgres isn't available in every region, so if you don't pin one explicitly it can silently land somewhere different from your web service. `render.yaml` pins both to `oregon`; a service's region can't be changed after creation, so if you ever see this, delete and let the Blueprint recreate it rather than trying to edit it in place.
+- **`tsc` fails on a clean Render build claiming it can't find `process`, `console`, `Buffer`, or any `node:*` module — but passes locally.** `NODE_ENV=production` makes plain `npm ci` skip devDependencies, including `@types/node`. `buildCommand` forces them back in with `npm ci --include=dev`.
+
+One more, Telegram-specific: if you ever regenerate `BOT_WEBHOOK_SECRET` by hand, keep it to `A-Z a-z 0-9 _ -` — Telegram's `setWebhook` rejects a `secret_token` containing other characters (Render's own `generateValue: true` can produce a `/` or `=`, which will fail silently until you try to register the webhook).
 
 ---
 
@@ -227,7 +273,9 @@ CI (`.github/workflows/ci.yml`) runs the full pipeline — lint, typecheck, test
 
 ---
 
-## 🗺 Roadmap / ideas for contributors
+## 🗺 Roadmap
+
+Ideas for contributors — pick one and open an issue to discuss before diving in:
 
 - [ ] Real ASR-based Speaking auto-scoring (currently: cue cards + self-assessment, since free speech-to-text is out of scope for v1)
 - [ ] Web dashboard (progress charts, vocabulary export/import, cross-device view)
@@ -237,8 +285,6 @@ CI (`.github/workflows/ci.yml`) runs the full pipeline — lint, typecheck, test
 - [ ] More content: this ships with a curated starter bank (grammar topics, vocab, reading/listening texts, IELTS/SAT sets) — it's intentionally easy to extend since it's just versioned TypeScript under `src/content/**`
 - [ ] Additional interface languages
 - [x] Pluggable OpenAI/Anthropic `AIProvider` implementations alongside Gemini
-
-Contributions welcome — please open an issue to discuss significant changes first.
 
 ---
 
