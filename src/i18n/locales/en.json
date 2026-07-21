@@ -162,6 +162,9 @@
     "change_goal": "⏰ Change daily goal",
     "toggle_notifications": "🔔 Toggle reminders",
     "change_reminder_times": "⏱ Reminder times",
+    "ask_morning_reminder": "🕗 HH:MM (24h, your local time) — morning reminder:",
+    "ask_evening_reminder": "🌙 HH:MM — evening reminder:",
+    "invalid_time": "Please send a valid time as HH:MM, e.g. 08:30.",
     "saved": "✅ Saved."
   },
   "errors": {
@@ -314,7 +317,6 @@
     "title": "🎯 <b>Digital SAT Preparation</b>",
     "body": "Practice Reading & Writing, Vocabulary, and Academic Grammar in the Digital SAT style.",
     "reading": "📖 Reading",
-    "writing": "✍️ Writing & Language",
     "vocabulary": "🗂 Vocabulary",
     "grammar": "📘 Academic Grammar",
     "full_mock": "📝 Full mock test",

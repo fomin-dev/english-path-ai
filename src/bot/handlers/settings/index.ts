@@ -63,7 +63,7 @@ export function registerSettingsHandlers(bot: Bot<BotContext>): void {
   bot.callbackQuery('settings:change_reminder_times', async (ctx) => {
     await ctx.answerCallbackQuery();
     ctx.session.settings = { awaitingReminderTime: 'morning' };
-    await ctx.reply('🕗 HH:MM (24h, your local time) — morning reminder:');
+    await ctx.reply(t(ctx.session.locale, 'settings.ask_morning_reminder'));
   });
 
   bot.on('message:text', async (ctx, next) => {
@@ -76,14 +76,14 @@ export function registerSettingsHandlers(bot: Bot<BotContext>): void {
 
     const text = ctx.msg.text.trim();
     if (!TIME_RE.test(text)) {
-      await ctx.reply('Please send a valid time as HH:MM, e.g. 08:30.');
+      await ctx.reply(t(ctx.session.locale, 'settings.invalid_time'));
       return;
     }
 
     if (awaiting === 'morning') {
       await updateUser(ctx.dbUser.id, { morningReminderTime: text });
       ctx.session.settings = { awaitingReminderTime: 'evening' };
-      await ctx.reply('🌙 HH:MM — evening reminder:');
+      await ctx.reply(t(ctx.session.locale, 'settings.ask_evening_reminder'));
       return;
     }
 

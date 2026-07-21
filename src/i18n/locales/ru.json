@@ -162,6 +162,9 @@
     "change_goal": "⏰ Изменить дневную цель",
     "toggle_notifications": "🔔 Переключить напоминания",
     "change_reminder_times": "⏱ Время напоминаний",
+    "ask_morning_reminder": "🕗 ЧЧ:ММ (24ч, ваше местное время) — утреннее напоминание:",
+    "ask_evening_reminder": "🌙 ЧЧ:ММ — вечернее напоминание:",
+    "invalid_time": "Пришлите корректное время в формате ЧЧ:ММ, например 08:30.",
     "saved": "✅ Сохранено."
   },
   "errors": {
@@ -314,7 +317,6 @@
     "title": "🎯 <b>Подготовка к Digital SAT</b>",
     "body": "Тренируйте Reading & Writing, лексику и академическую грамматику в формате Digital SAT.",
     "reading": "📖 Reading",
-    "writing": "✍️ Writing & Language",
     "vocabulary": "🗂 Лексика",
     "grammar": "📘 Академическая грамматика",
     "full_mock": "📝 Полный пробный тест",
