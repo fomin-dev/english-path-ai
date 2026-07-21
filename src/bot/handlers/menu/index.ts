@@ -15,9 +15,29 @@ import { showStatsMenu } from '../stats/index.js';
 import { showSettingsMenu } from '../settings/index.js';
 import { showAdminMenu } from '../admin/index.js';
 
+/**
+ * Every "awaiting free text" flow (Writing check, AI tutor, IELTS writing task,
+ * admin broadcast/lookup, settings reminder-time entry) tries to self-clear its
+ * session state when it sees a main-menu label via isMenuLabel(). That check is
+ * unreachable in practice: these bot.hears() menu matchers are registered before
+ * those handlers' bot.on('message:text') catch-alls, so an exact menu-label
+ * message is always fully handled here first and never reaches them. Left
+ * uncleared, a stale flag silently hijacks the next unrelated free-text message
+ * the learner sends (e.g. into another feature) as if it were still essay text.
+ * Clearing them here, on every menu navigation, is what those checks intended.
+ */
+function clearAwaitingTextState(ctx: BotContext): void {
+  ctx.session.writing = undefined;
+  ctx.session.tutorMode = false;
+  ctx.session.ieltsWriting = undefined;
+  ctx.session.admin = undefined;
+  ctx.session.settings = undefined;
+}
+
 function requireOnboarded(handler: (ctx: BotContext) => Promise<void>) {
   return async (ctx: BotContext): Promise<void> => {
     if (!ctx.dbUser.onboardingCompleted) return;
+    clearAwaitingTextState(ctx);
     await handler(ctx);
   };
 }
