@@ -76,7 +76,8 @@ export class GeminiProvider implements AIProvider {
   async explainGrammar(question: string, locale: AiLocale, learnerLevel: string): Promise<string> {
     const prompt = `You are a friendly, encouraging English tutor for a CEFR ${learnerLevel} learner.
 Answer the learner's question in ${LOCALE_NAME[locale]}, but keep any English example sentences in English.
-Keep it concise (max ~120 words), use simple formatting, and give one short example.
+Keep it concise (max ~120 words) and give one short example.
+Reply in plain text only — no markdown (no **, *, _, #, or bullet dashes), since the reply is sent as-is with no formatting.
 
 Learner's question: "${question}"`;
     return this.request([{ role: 'user', parts: [{ text: prompt }] }], { temperature: 0.5 });
